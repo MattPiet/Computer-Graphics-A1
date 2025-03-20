@@ -1,0 +1,23 @@
+Thu Mar 20 11:53:54 2025
+[INFO]: Starting the SceneManager
+[INFO]: OpenGL version: 4.6.0 - Build 31.0.101.5333
+[INFO]: Graphics card vendor Intel
+[INFO]: Graphics card name Intel(R) Iris(R) Xe Graphics
+[INFO]: GLSL Version 4.60 - Build 31.0.101.5333
+[INFO]: Created Scene0: 
+[INFO]: Loading assets Scene0: 
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:2
+
+[INFO]: Uniforms:
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"cameraPos" loc:3
+"skybox" loc:4
+
+[INFO]: Deleting the SceneManager
+[INFO]: Deleting assets Scene0: 
+[INFO]: Deleted Scene0: 
