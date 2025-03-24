@@ -23,6 +23,9 @@ bool Scene3g::OnCreate() {
 	sub = new Body();
 	sub->OnCreate();
 
+	terrain = new Body();
+	terrain->OnCreate();
+
 	mesh = new Mesh("meshes/Sphere.obj");
 	mesh->OnCreate();
 
@@ -32,16 +35,21 @@ bool Scene3g::OnCreate() {
 
 	terrainTexture = new Texture();
 	terrainTexture->LoadImage("textures/8x8_checkered_board.png");
-
+	//fuck u matehw!!
 	GLint MaxPatchVertices = 0;
 	glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
 	std::cout << "Max supported patch verticies&d\n" << MaxPatchVertices << std::endl;
 	glPatchParameteri(GL_PATCH_VERTICES, 3);
+
 	terrainMesh = new Mesh("meshes/Plane.obj");
 	terrainMesh->OnCreate();
-	terrainModelMatrix = MMath::translate(0.0f, -10.0f, 0.0f) *
-		MMath::rotate(90.0f, Vec3(1.0f, 0.0f, 0.0f)) *
-		MMath::scale(40.0f, 1.0f, 40.0f);
+
+	terrain->pos = Vec3(0.0f, -10.0f, 0.0f);
+	terrain->orientation *= QMath::angleAxisRotation(90, Vec3(1.0f, 0.0f, 0.0f));
+	terrain->size = Vec3(30.0f, 30.0f, 30.0f);
+	//terrainModelMatrix = MMath::translate(0.0f, -10.0f, 0.0f) *
+	//	MMath::rotate(90.0f, Vec3(1.0f, 0.0f, 0.0f)) *
+	//	MMath::scale(40.0f, 1.0f, 40.0f);
 
 	camera = new Camera();
 	camera->OnCreate();
@@ -115,6 +123,19 @@ void Scene3g::OnDestroy() {
 
 	texture->OnDestroy();
 	delete texture;
+
+	terrain->OnDestroy();
+	delete terrain;
+
+	terrainMesh->OnDestroy();
+	delete terrainMesh;
+
+	tessShader->OnDestroy();
+	delete tessShader;
+
+	terrainTexture->OnDestroy();
+	delete terrainTexture;
+
 
 
 	camera->OnDestroy();
@@ -198,16 +219,17 @@ void Scene3g::Render() const {
 	mesh->Render(GL_TRIANGLES);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glUseProgram(tessShader->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, terrainTexture->getTextureID());
 	glUniformMatrix4fv(tessShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(tessShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix2());
-	glUniformMatrix4fv(tessShader->GetUniformID("modelMatrix"), 1, GL_FALSE, terrainModelMatrix);
+	glUniformMatrix4fv(tessShader->GetUniformID("modelMatrix"), 1, GL_FALSE, terrain->GetModelMatrix());
 	//glUniform1f(tessShader->GetUniformID("tessLevelOuter"), 10.0f);
 	//glUniform1f(tessShader->GetUniformID("tessLevelInner"), 10.0f);
 	terrainMesh->Render(GL_PATCHES);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glUseProgram(0);
 }

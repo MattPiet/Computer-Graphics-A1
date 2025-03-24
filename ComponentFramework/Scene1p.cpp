@@ -46,7 +46,7 @@ bool Scene1p::OnCreate() {
 	plane->OnCreate();
 
 
-	planeShape = new Plane();
+	planeShape = new surface::Plane();
 	planeShape->normal = Vec3(0.0f, 0.0f, -1.0f);
 
 	

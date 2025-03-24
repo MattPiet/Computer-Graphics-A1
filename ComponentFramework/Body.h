@@ -4,8 +4,11 @@
 #include <VMath.h>
 #include <MMath.h>
 #include <QMath.h>
+#include <Triangle.h>
+#include <TMath.h>
+#include <Dot.h>
 using namespace MATH; 
-
+using namespace MATHEX;
 /// Just forward declair these classes so I can define a pointer to them
 /// Used later in the course
 class Mesh;
@@ -54,7 +57,8 @@ public:
 	void UpdateVel(float deltaTime);
 	void UpdateAngularAcc(float deltaTime);
 	void RodConstraint(float deltaTime, Vec3 anchorPoint, float rodLength);
-
+	static void LineCollision(Body* sphere, Body* pointOnPlane, Triangle* triangleShape, Body* collisionPoint, DualQuat line01, DualQuat line12, DualQuat line20,
+		Body* pointOnLine01, Body* pointOnLine12, Body* pointOnLine20);
 };
 
 #endif

@@ -4,9 +4,10 @@
 #include <MMath.h>
 #include <QMath.h>
 using namespace MATH;
-
-class Plane {
-public:
-	Vec3 normal;
-	float d = 0.0f;
-};
+namespace surface {
+	class Plane {
+	public:
+		Vec3 normal;
+		float d = 0.0f;
+	};
+}

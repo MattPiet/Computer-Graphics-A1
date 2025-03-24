@@ -35,9 +35,9 @@ private:
 	Mesh* planeMesh_3;
 
 
-	Plane* planeShape;
-	Plane* planeShape_2;
-	Plane* planeShape_3;
+	surface::Plane* planeShape;
+	surface::Plane* planeShape_2;
+	surface::Plane* planeShape_3;
 
 	Quaternion rotation;
 	Quaternion rotationForPlane2;

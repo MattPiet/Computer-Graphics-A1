@@ -6,7 +6,7 @@ uniform float tessLevelInner;
 uniform float tessLevelOuter;
 
 in vec2 uvCoordFromVert[];
-in vec3 normalFromVert[];
+//in vec3 normalFromVert[];
 
 out vec2 uvCoordFromCtrl[];
 out vec3 normalFromCtrl[];
@@ -14,12 +14,12 @@ void main() {
     /// Pass through input vertices to tessellation evaluation stage
     gl_out[gl_InvocationID].gl_Position =  gl_in[gl_InvocationID].gl_Position;
     uvCoordFromCtrl[gl_InvocationID] = uvCoordFromVert[gl_InvocationID];
-    normalFromCtrl[gl_InvocationID] = normalFromVert[gl_InvocationID];
+    //normalFromCtrl[gl_InvocationID] = normalFromVert[gl_InvocationID];
 
    float tesslevel = 1.0;
     /// Set tessellation levels
     if (gl_InvocationID == 0) {
-        tesslevel = 1.0;
+        tesslevel = 20.0;
         gl_TessLevelInner[0] = tesslevel;
 
         gl_TessLevelOuter[0] = tesslevel;

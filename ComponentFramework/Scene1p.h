@@ -38,7 +38,7 @@ private:
 	Mesh* planeMesh;
 
 
-	Plane* planeShape;
+	surface::Plane* planeShape;
 
 
 	Quaternion rotation;

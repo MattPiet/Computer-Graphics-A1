@@ -9,6 +9,7 @@
 #include "Scene2g.h"
 #include "Scene3p.h"
 #include "Scene3g.h"
+#include "Scene4p.h"
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
 	fps(60), isRunning{false}, fullScreen{false} {
@@ -53,7 +54,7 @@ bool SceneManager::Initialize(std::string name_, int width_, int height_) {
 	}
 
 	/********************************   Default first scene   ***********************/
-	BuildNewScene(SCENE_NUMBER::SCENE2g);
+	BuildNewScene(SCENE_NUMBER::SCENE4p);
 	/********************************************************************************/
 	return true;
 }
@@ -125,6 +126,12 @@ void SceneManager::HandleEvents() {
 				currentScene = nullptr;
 				BuildNewScene(SCENE_NUMBER::SCENE3g);
 				return;
+			case SDL_SCANCODE_F7:
+				currentScene->OnDestroy();
+				delete currentScene;
+				currentScene = nullptr;
+				BuildNewScene(SCENE_NUMBER::SCENE4p);
+				return;
 				break;
 
 			default:
@@ -178,6 +185,10 @@ bool SceneManager::BuildNewScene(SCENE_NUMBER scene) {
 		break;
 	case SCENE_NUMBER::SCENE3g:
 		currentScene = new Scene3g();
+		status = currentScene->OnCreate();
+		break;
+	case SCENE_NUMBER::SCENE4p:
+		currentScene = new Scene4p();
 		status = currentScene->OnCreate();
 		break;
 	default:

@@ -19,6 +19,7 @@ class Texture;
 class Scene3g : public Scene {
 private:
 	Body* sub;
+	Body* terrain;
 	Shader* shader;
 	Shader* tessShader;
 	Mesh* mesh;

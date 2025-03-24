@@ -96,6 +96,68 @@ void Body::RodConstraint(float deltaTime, Vec3 anchorPoint, float rodLength){
 	vel += deltaVel;
 }
 
+ void Body::LineCollision(Body* sphere, Body* pointOnPlane, Triangle* triangleShape, Body* collisionPoint, DualQuat line01, DualQuat line12, DualQuat line20,
+	Body* pointOnLine01, Body* pointOnLine12, Body* pointOnLine20) {
+
+	if (TMath::isPointInsideTriangle(pointOnPlane->pos, *triangleShape)) {
+		collisionPoint->pos = pointOnPlane->pos;
+	}
+	else {
+		// What are the two closest edges to the point on the plane?
+		float dist01 = fabs(DQMath::orientedDist(pointOnPlane->pos, line01));
+		float dist12 = fabs(DQMath::orientedDist(pointOnPlane->pos, line12));
+		float dist20 = fabs(DQMath::orientedDist(pointOnPlane->pos, line20));
+		if (dist01 <= dist12 && dist01 <= dist20) {
+			// If line01 is the closest line, then use that projected position
+			collisionPoint->pos = pointOnLine01->pos;
+			// Hold on, what if that position is outide the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist12 <= dist20) {
+					collisionPoint->pos = pointOnLine12->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine20->pos;
+				}
+			}
+		}
+		else if (dist12 <= dist01 && dist12 <= dist20) {
+			// In this case, line12 is the closest line
+			collisionPoint->pos = pointOnLine12->pos;
+			// But wait! What if that is not inside the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist01 <= dist20) {
+					collisionPoint->pos = pointOnLine01->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine20->pos;
+				}
+			}
+		}
+		else {
+			// Final case is where line20 is the closest line
+			collisionPoint->pos = pointOnLine20->pos;
+			// Hold your horses! What if that is not inside the triangle?
+			if (!TMath::isPointInsideTriangle(collisionPoint->pos, *triangleShape)) {
+				if (dist01 <= dist12) {
+					collisionPoint->pos = pointOnLine01->pos;
+				}
+				else {
+					collisionPoint->pos = pointOnLine12->pos;
+				}
+			}
+		}
+	}
+		// Now that you have the collision point, let's check if we will collide
+// I'm tired after all this coding. Let's use Scott's distance method
+	if (VMath::distance(sphere->pos, collisionPoint->pos) <= sphere->radius) {
+		// Find the collision normal vector
+		Vec3 collisionNormal = VMath::normalize(sphere->pos - collisionPoint->pos);
+		// Reflect the sphere off the triangle
+		// Scott to the rescue again with his reflect method
+		sphere->vel = VMath::reflect(sphere->vel, collisionNormal);
+	}
+}
+
 
 
 void Body::UpdateOrientation(float deltaTime){

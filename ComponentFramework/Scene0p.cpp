@@ -36,13 +36,13 @@ bool Scene0p::OnCreate() {
 	plane_3 = new Body();
 	plane_3->OnCreate();
 
-	planeShape = new Plane();
+	planeShape = new 	surface::Plane();
 	planeShape->normal = Vec3(0.0f, 0.0f, -1.0f);
 
-	planeShape_2 = new Plane();
+	planeShape_2 = new 	surface::Plane();
 	planeShape_2->normal = Vec3(0.0f, 0.0f, -1.0f);
 
-	planeShape_3 = new Plane();
+	planeShape_3 = new 	surface::Plane();
 	planeShape_3->normal = Vec3(0.0f, 0.0f, -1.0f);
 
 	lightPos = Vec3(10.0f, 0.0f, 0.0f);
