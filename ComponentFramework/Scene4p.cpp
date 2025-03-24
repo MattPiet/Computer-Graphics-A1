@@ -37,7 +37,7 @@ bool Scene4p::OnCreate() {
 	sphere = new Body();
 	sphere->OnCreate();
 	sphere->pos.set(0, 0, -40);
-	sphere->radius = 2;
+	sphere->radius =1.5;
 
 	pointOnPlane = new Body();
 	pointOnPlane->OnCreate();
@@ -141,6 +141,9 @@ void Scene4p::OnDestroy() {
 
 	collisionPoint->OnDestroy();
 	delete collisionPoint;
+
+	camera->OnDestroy();
+	delete camera;
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
@@ -245,7 +248,7 @@ void Scene4p::Render() const {
 	/// Set the background color then clear the screen
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	camera->RenderSkyBox();
 
 	if (drawInWireMode) {
@@ -255,7 +258,7 @@ void Scene4p::Render() const {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-	Vec4 colour = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	Vec4 colour = Vec4(1.0f, 0.0f, 1.0f, 1.0f);
 	// Restore OpenGL state
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
@@ -268,9 +271,17 @@ void Scene4p::Render() const {
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, triangle->GetModelMatrix());
 	glUniform4fv(shader->GetUniformID("colour"), 1, colour);
 	triangleMesh->Render(GL_TRIANGLES);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	if (drawInWireMode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
+	colour = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
+	//glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
 	//glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
@@ -297,7 +308,7 @@ void Scene4p::Render() const {
 	mesh->Render(GL_TRIANGLES);
 	
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
 
 
 	/// Added by Scott

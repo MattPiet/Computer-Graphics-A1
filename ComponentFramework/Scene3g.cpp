@@ -136,8 +136,6 @@ void Scene3g::OnDestroy() {
 	terrainTexture->OnDestroy();
 	delete terrainTexture;
 
-
-
 	camera->OnDestroy();
 	delete camera;
 
