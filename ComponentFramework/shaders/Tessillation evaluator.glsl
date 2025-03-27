@@ -7,6 +7,9 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
 uniform sampler2D textureData;
+uniform float height_scale;
+layout(binding = 0) uniform sampler2D terrain_height_map;
+layout(binding = 1) uniform sampler2D terrainTexture;
 
 in vec2 uvCoordFromCtrl[];
 //in vec3 normalFromCtrl[];
@@ -33,7 +36,7 @@ void main() {
     /// Interpolate position across the triangle
     vec4 position = interpolateVec4(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position);
 
-    vec4 height = vec4(texture(textureData,uvCoordFromEval));
-    position.z =  height.r;
+    vec4 height = vec4(texture(terrain_height_map,uvCoordFromEval));
+    position.z =  height.r * height_scale;
     gl_Position =  projectionMatrix * viewMatrix * modelMatrix * (position );
 }

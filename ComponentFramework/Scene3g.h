@@ -26,6 +26,10 @@ private:
 	Mesh* terrainMesh;
 	Texture* texture;
 	Texture* terrainTexture;
+
+	Texture* terrain_height_map;
+	float height_scale = 1;
+
 	float direction = 2.5f;
 
 	Matrix4 projectionMatrix;
@@ -37,6 +41,8 @@ private:
 	bool drawInWireMode;
 	float rotate;
 
+	float tessLevelOuter = 10.0f;
+	float tessLevelInner = 10.0f;
 
 	Trackball trackball;
 

@@ -16,15 +16,15 @@ void main() {
     uvCoordFromCtrl[gl_InvocationID] = uvCoordFromVert[gl_InvocationID];
     //normalFromCtrl[gl_InvocationID] = normalFromVert[gl_InvocationID];
 
-   float tesslevel = 1.0;
+  // float tesslevel = 1.0;
     /// Set tessellation levels
     if (gl_InvocationID == 0) {
-        tesslevel = 20.0;
-        gl_TessLevelInner[0] = tesslevel;
+        //tesslevel = 20.0;
+        gl_TessLevelInner[0] = tessLevelInner;
 
-        gl_TessLevelOuter[0] = tesslevel;
-        gl_TessLevelOuter[1] = tesslevel;
-        gl_TessLevelOuter[2] = tesslevel;
+        gl_TessLevelOuter[0] = tessLevelOuter;
+        gl_TessLevelOuter[1] = tessLevelOuter;
+        gl_TessLevelOuter[2] = tessLevelOuter;
 
     }
 }

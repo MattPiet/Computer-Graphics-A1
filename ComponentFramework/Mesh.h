@@ -14,17 +14,23 @@ class Mesh {
 
 private:
 	const char* filename;
-	std::vector<Vec3> vertices;
 	std::vector<Vec3> normals;
 	std::vector<Vec2> uvCoords;
+	std::vector<Vec3> vertices_storage;
 	size_t dateLength;
 	GLenum drawmode;
+
+	
 
 	/// Private helper methods
 	void LoadModel(const char* filename);
 	void StoreMeshData(GLenum drawmode_);
 	GLuint vao, vbo;
 public:
+	
+
+	bool need_vertices = false;
+	std::vector<Vec3> vertices;
 	Mesh(const char* filename_);
 	~Mesh();
 	bool OnCreate();
@@ -32,7 +38,9 @@ public:
 	void Update(const float deltaTime);
 	void Render() const;
 	void Render(GLenum drawmode) const;
-	
+	void clearStorage() { vertices_storage.clear(); };
+	std::vector<Vec3> getVertices() {return vertices_storage; }
+
 	// Umer messing with Scott’s Mesh class
 	// We need the option to create a mesh from a Triangle object
 	// default constructor

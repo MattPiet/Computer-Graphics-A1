@@ -23,7 +23,10 @@ void Mesh::LoadModel(const char* filename) {
     std::vector<tinyobj::material_t> materials;
     std::string warn, err;
 
-    vertices.clear();
+    if (need_vertices == false) {
+        vertices.clear();
+    }
+
     normals.clear();
 	uvCoords.clear();
 
@@ -47,6 +50,9 @@ void Mesh::LoadModel(const char* filename) {
             uvCoord.y = -attrib.texcoords[2 * index.texcoord_index + 1];
 
             vertices.push_back(vertex);
+            ////
+         //   vertices_storage.push_back(vertex);
+            ////
             normals.push_back(normal);
             uvCoords.push_back(uvCoord);
         }
@@ -89,7 +95,9 @@ void Mesh::StoreMeshData(GLenum drawmode_) {
     dateLength = vertices.size();
 
     /// give back the memory used in these vectors. The data is safely stored in the GPU now
-    vertices.clear();
+    if (need_vertices == false) {
+        vertices.clear();
+    }
     normals.clear();
     uvCoords.clear();
 

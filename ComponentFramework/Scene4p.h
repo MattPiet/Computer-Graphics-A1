@@ -31,6 +31,8 @@ private:
 	Body* pointOnLine20; // vertices v2 and v0
 	Body* collisionPoint;
 
+	Vec3 impulseDirCameraSpace = Vec3(0, 0, -1);
+	Vec3 impulseDirWorldSpace;
 
 	Body* sphere;
 	Mesh* mesh;
@@ -38,6 +40,10 @@ private:
 	Shader* shader;
 	
 	Texture* texture;
+
+	Body* knot;
+	Mesh* knot_mesh;
+	std::vector<MATHEX::Triangle*> knotTris;
 
 	Trackball trackball;
 	// Don't tell Scott about this

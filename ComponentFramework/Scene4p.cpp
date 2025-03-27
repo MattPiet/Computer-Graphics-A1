@@ -13,11 +13,20 @@ using namespace MATHEX;
 using namespace MATH;
 Scene4p::Scene4p()
 	: triangle{ nullptr }
+	, sphere{nullptr}
 	, shader{ nullptr }
 	, mesh{ nullptr }
-	, drawInWireMode{ false }
+	, drawInWireMode{ true }
 	, drawNormals{ true }
 	, triangleShape {nullptr}
+	, pointOnLine01 {nullptr}
+	, pointOnLine12 {nullptr}
+	, pointOnLine20 {nullptr}
+	, collisionPoint {nullptr}
+	, camera {nullptr}
+	, texture {nullptr}
+	, triangleMesh {nullptr}
+
 {
 	Debug::Info("Created Scene4p: ", __FILE__, __LINE__);
 }
@@ -32,16 +41,16 @@ bool Scene4p::OnCreate() {
 	Debug::Info("Loading assets Scene4p: ", __FILE__, __LINE__);
 	triangle = new Body();
 	triangle->OnCreate();
-	triangle->pos.set(0, 0, -45);
+	triangle->pos.set(0, 0, 0);
 
 	sphere = new Body();
 	sphere->OnCreate();
 	sphere->pos.set(0, 0, -40);
-	sphere->radius =1.5;
+	sphere->radius =0.5;
 
 	pointOnPlane = new Body();
 	pointOnPlane->OnCreate();
-	pointOnPlane->size *= 0.5;
+	pointOnPlane->size *= 0.25;
 
 	pointOnLine01 = new Body(); 
 	pointOnLine12 = new Body(); 
@@ -49,20 +58,44 @@ bool Scene4p::OnCreate() {
 	pointOnLine01->OnCreate();
 	pointOnLine12->OnCreate();
 	pointOnLine20->OnCreate();
-	pointOnLine01->size *= 0.5;
-	pointOnLine12->size *= 0.5;
-	pointOnLine20->size *= 0.5;
+	pointOnLine01->size *= 0.25;
+	pointOnLine12->size *= 0.25;
+	pointOnLine20->size *= 0.25;
 
 	collisionPoint = new Body();
 	collisionPoint->OnCreate();
 
 	triangleShape = new Triangle(
-		Vec3(-2.0f, -1.0f, 0.0f),
-		Vec3(2.0f, -1.0f, 0.0f),
-		Vec3(0.0f, 3.0f, 0.0f)
+		Vec3(-2.0f, -1.0f, -45.0f),
+		Vec3(2.0f, -1.0f, -45.0f),
+		Vec3(0.0f, 3.0f, -45.0f)
 	);
 
+	knot = new Body();
+	knot->OnCreate();
+	//knot->pos.set(0.0f, 0.0f, 0.0f);
 
+	knot_mesh = new Mesh("meshes/Knot.obj");
+	knot_mesh->need_vertices = true;
+	knot_mesh->OnCreate();
+	int j = 0;
+	
+	for (int i = 0; i < knot_mesh->vertices.size(); i++) {
+		
+		if (j > knot_mesh->vertices.size() - 1) {
+			break;
+		}
+
+		Triangle* newTri = new Triangle(knot_mesh->vertices[0 + j]
+			, knot_mesh->vertices[1 + j]
+			, knot_mesh->vertices[2 + j]);
+		knotTris.push_back(newTri);
+		j += 3;
+	
+		
+	}
+	knot_mesh->vertices.clear();
+	knot_mesh->need_vertices = false;
 
 	mesh = new Mesh("meshes/Sphere.obj");
 	mesh->OnCreate();
@@ -144,6 +177,10 @@ void Scene4p::OnDestroy() {
 
 	camera->OnDestroy();
 	delete camera;
+
+	for (int i = 0; i < knotTris.size() - 1; i++) {
+		delete knotTris[i];
+	}
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
@@ -174,7 +211,10 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 			sphere->pos.y--;
 			break;
 		case SDL_SCANCODE_G:
-			sphere->vel.z = -5;
+			impulseDirWorldSpace = QMath::rotate(impulseDirCameraSpace,
+				trackball.getQuat());
+			sphere->vel = impulseDirWorldSpace * 5;
+			//sphere->vel.z = -5;
 			break;
 		case SDL_SCANCODE_R:
 			sphere->pos.set(0, 0, -40);
@@ -220,7 +260,7 @@ void Scene4p::Update(const float deltaTime) {
 	Vec4 pointOnPlane4d = project(sphere->pos, TMath::getPlane(*triangleShape));
 	// Ensure w is one by dividing it out. Then we can store this in a 3D vector
 	pointOnPlane->pos = VMath::perspectiveDivide(pointOnPlane4d);
-	pointOnPlane->pos.z -= 45.0f;
+
 
 
 	// I overloaded the "&" operator to join two points into a line
@@ -228,15 +268,37 @@ void Scene4p::Update(const float deltaTime) {
 	DualQuat line01 = triangleShape->getV0() & triangleShape->getV1();
 	DualQuat line12 = triangleShape->getV1() & triangleShape->getV2();
 	DualQuat line20 = triangleShape->getV2() & triangleShape->getV0();
-	
-	pointOnLine01->pos = VMath::perspectiveDivide((line01 | sphere->pos) ^ line01);
-	pointOnLine01->pos.z -= 45.0f;
+	//////////////////////////////////////
+	for (int i = 0; i < knotTris.size(); i++) {
+	DualQuat line01 = knotTris[i]->getV0() & knotTris[i]->getV1();
+	DualQuat line12 = knotTris[i]->getV1() & knotTris[i]->getV2();
+	DualQuat line20 = knotTris[i]->getV2() & knotTris[i]->getV0();
 
-	pointOnLine12->pos = VMath::perspectiveDivide((line12 | sphere->pos) ^ line12);
-	pointOnLine12->pos.z -= 45.0f;
 
-	pointOnLine20->pos = VMath::perspectiveDivide((line20 | sphere->pos) ^ line20);
-	pointOnLine20->pos.z -= 45.0f;
+	Vec4 point_on_line_01_4 = project(sphere->pos, line01);
+	pointOnLine01->pos = VMath::perspectiveDivide(point_on_line_01_4);
+
+	//pointOnLine01->pos.z -= 45.0f;
+	Vec4 point_on_line_12_4 = project(sphere->pos, line12);
+	pointOnLine12->pos = VMath::perspectiveDivide(point_on_line_12_4);
+
+	Vec4 point_on_line_20_4 = project(sphere->pos, line20);
+	pointOnLine20->pos = VMath::perspectiveDivide(point_on_line_20_4);
+
+	Body::LineCollision(sphere, pointOnPlane, knotTris[i], collisionPoint, line01, line12, line20,
+		pointOnLine01, pointOnLine12, pointOnLine20);
+	}
+	//////////////////////////////////
+	Vec4 point_on_line_01_4 = project(sphere->pos, line01);
+	pointOnLine01->pos = VMath::perspectiveDivide(point_on_line_01_4);
+
+	//pointOnLine01->pos.z -= 45.0f;
+	Vec4 point_on_line_12_4 = project(sphere->pos, line12);
+	pointOnLine12->pos = VMath::perspectiveDivide(point_on_line_12_4);
+
+	Vec4 point_on_line_20_4 = project(sphere->pos, line20);
+	pointOnLine20->pos = VMath::perspectiveDivide(point_on_line_20_4);
+
 
 	Body::LineCollision(sphere, pointOnPlane, triangleShape, collisionPoint, line01, line12, line20,
 		pointOnLine01, pointOnLine12, pointOnLine20);
@@ -289,7 +351,15 @@ void Scene4p::Render() const {
 	glUniform4fv(shader->GetUniformID("colour"), 1, colour);
 	mesh->Render(GL_TRIANGLES);
 
+	// Knot
+	colour = Vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, knot->GetModelMatrix());
+	glUniform4fv(shader->GetUniformID("colour"), 1, colour);
+	knot_mesh->Render(GL_TRIANGLES);
 
+	//knot ^
 
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, pointOnPlane->GetModelMatrix());	
 	glUniform4fv(shader->GetUniformID("colour"), 1, colour);
@@ -307,9 +377,6 @@ void Scene4p::Render() const {
 	glUniform4fv(shader->GetUniformID("colour"), 1, colour);
 	mesh->Render(GL_TRIANGLES);
 	
-
-	
-
 
 	/// Added by Scott
 	if (drawNormals == true) {

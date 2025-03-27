@@ -5,6 +5,6 @@ in vec2 uvCoordFromEval;
 out vec4 fragColor;
 uniform sampler2D textureData;
 void main() {
-    ///fragColor = texture(textureData,uvCoordFromEval);
-    fragColor = vec4(0.0,1.0,0.0,1.0);
+    fragColor = texture(textureData,uvCoordFromEval);
+    //fragColor = vec4(0.0,1.0,0.0,1.0);
 }
