@@ -154,7 +154,16 @@ void Body::RodConstraint(float deltaTime, Vec3 anchorPoint, float rodLength){
 		Vec3 collisionNormal = VMath::normalize(sphere->pos - collisionPoint->pos);
 		// Reflect the sphere off the triangle
 		// Scott to the rescue again with his reflect method
-		sphere->vel = VMath::reflect(sphere->vel, collisionNormal);
+		if (VMath::mag(sphere->vel) > VERY_SMALL) {
+			sphere->vel = VMath::reflect(sphere->vel, collisionNormal);
+			
+			
+			float d = VMath::dot(collisionNormal, sphere->vel);
+			
+				
+			sphere->pos += ((d - sphere->radius) * -VMath::normalize(collisionNormal)) / 50;
+			//sphere->pos += VMath::normalize(sphere->vel) / 10;
+		}
 	}
 }
 

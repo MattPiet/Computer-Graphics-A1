@@ -1,4 +1,4 @@
-Wed Mar 26 15:08:38 2025
+Thu Mar 27 13:26:39 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 31.0.101.5333
 [INFO]: Graphics card vendor Intel
@@ -6,3 +6,24 @@ Wed Mar 26 15:08:38 2025
 [INFO]: GLSL Version 4.60 - Build 31.0.101.5333
 [INFO]: Created Scene4p: 
 [INFO]: Loading assets Scene4p: 
+[INFO]: Uniforms:
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"skybox" loc:2
+
+[INFO]: Uniforms:
+"color" loc:3
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+"colour" loc:3
+"myTexture" loc:4
+
+[INFO]: Deleting the SceneManager
+[INFO]: Deleting assets Scene4p: 
+[INFO]: Deleted Scene4p: 

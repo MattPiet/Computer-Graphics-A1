@@ -44,6 +44,7 @@ private:
 	Body* knot;
 	Mesh* knot_mesh;
 	std::vector<MATHEX::Triangle*> knotTris;
+	std::vector<Mesh*> triangles_from_knot_meshs;
 
 	Trackball trackball;
 	// Don't tell Scott about this
