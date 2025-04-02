@@ -25,9 +25,11 @@ private:
 	Mesh* mesh;
 	Mesh* terrainMesh;
 	Texture* texture;
-	Texture* terrainTexture;
 
 	Texture* terrain_height_map;
+	Texture* terrain_normal_map;
+	Texture* terrain_diffuse_map;
+
 	float height_scale = 1;
 
 	float direction = 2.5f;
@@ -35,8 +37,9 @@ private:
 	Matrix4 projectionMatrix;
 	Matrix4 viewMatrix;
 	Matrix4 modelMatrix;
-	Matrix4 terrainModelMatrix;
+	
 
+	int zoom = 0;
 
 	bool drawInWireMode;
 	float rotate;
@@ -52,6 +55,8 @@ private:
 	Vec3 cameraPos = Vec3(0.0f, 0.0f, -1.0f);               // We are in 3D now, so we need the position & orientation of the camera  
 	Vec3 renderCameraPos = Vec3(0.0f, 0.0f, -1.0f);
 	Quaternion cameraOrientation; // I love quaternions. Who wants to learn about them early?
+
+	Vec3 lightPos;
 
 public:
 	//Quaternion rotation = QMath::angleAxisRotation(10.0f, Vec3(0.0f, 1.0f, 0.0f));

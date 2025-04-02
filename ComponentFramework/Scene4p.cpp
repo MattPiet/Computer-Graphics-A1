@@ -92,15 +92,15 @@ bool Scene4p::OnCreate() {
 		knotTris.push_back(newTri);
 		j += 3;	
 	}
-
+	
 	knot_mesh->vertices.clear();
 	knot_mesh->need_vertices = false;
 
-	for (int i = 0; i < knotTris.size(); i++) {
-		Mesh* new_tri_mesh = new Mesh();
-		new_tri_mesh->OnCreate(knotTris[i]);
-		triangles_from_knot_meshs.push_back(new_tri_mesh);
-	}
+	//for (int i = 0; i < knotTris.size(); i++) {
+	//	Mesh* new_tri_mesh = new Mesh();
+	//	new_tri_mesh->OnCreate(knotTris[i]);
+	//	triangles_from_knot_meshs.push_back(new_tri_mesh);
+	//}
 
 	mesh = new Mesh("meshes/Sphere.obj");
 	mesh->OnCreate();
@@ -142,7 +142,7 @@ bool Scene4p::OnCreate() {
 	// Let's set the pos and orientation of the camera instead of lookAt
 	
 
-	camera->dontTrackY();
+	//camera->dontTrackY();
 
 	return true;
 }
@@ -200,6 +200,14 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 	//trackball.HandleEvents(sdlEvent);
 	camera->HandelEvents(sdlEvent);
 	switch (sdlEvent.type) {
+	case SDL_MOUSEWHEEL:
+		if (sdlEvent.wheel.y > 0) {
+			zoom -= 2;  // Scroll up
+		}
+		else if (sdlEvent.wheel.y < 0) {
+			zoom += 2;  // Scroll down
+		}
+		break;
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_W:
@@ -231,7 +239,7 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 			//sphere->vel.z = -5;
 			break;
 		case SDL_SCANCODE_R:
-			sphere->pos.set(0, 0, -40);
+			sphere->pos.set(0, 15, 5);
 			sphere->vel.set(0.0f,0.0f,0.0f);
 			break;
 
@@ -263,7 +271,7 @@ void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {
 void Scene4p::Update(const float deltaTime) {
 	sphere->updatePos(deltaTime);
 	sphere->UpdateVel(deltaTime);
-	Vec3 offset = Vec3(0.0f, 1.0f, 40.0f);
+	Vec3 offset = Vec3(0.0f, 0.0f, 80.0f + zoom);
 	Vec3 rotatedOffset = QMath::rotate(offset, camera->GetOrientation());
 	cameraPos = sphere->pos + rotatedOffset;
 	camera->SetView(camera->GetOrientation(), cameraPos);
@@ -297,6 +305,7 @@ void Scene4p::Update(const float deltaTime) {
 		Vec4 point_on_line_01_4 = project(sphere->pos, line01);
 		pointOnLine01->pos = VMath::perspectiveDivide(point_on_line_01_4);
 
+		if (VMath::distance(sphere->pos, pointOnLine01->pos) < 5.0f) {
 		//pointOnLine01->pos.z -= 45.0f;
 		Vec4 point_on_line_12_4 = project(sphere->pos, line12);
 		pointOnLine12->pos = VMath::perspectiveDivide(point_on_line_12_4);
@@ -304,7 +313,7 @@ void Scene4p::Update(const float deltaTime) {
 		Vec4 point_on_line_20_4 = project(sphere->pos, line20);
 		pointOnLine20->pos = VMath::perspectiveDivide(point_on_line_20_4);
 
-		if (VMath::distance(sphere->pos, pointOnLine01->pos) < 5.0f) {
+
 			Body::LineCollision(sphere, pointOnPlane, knotTris[i], collisionPoint, line01, line12, line20,
 				pointOnLine01, pointOnLine12, pointOnLine20);
 		}
@@ -357,7 +366,7 @@ void Scene4p::Render() const {
 	triangleMesh->Render(GL_TRIANGLES);
 
 	///////////////
-	colour = Vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	//colour = Vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	//for (int i = 0; i < triangles_from_knot_meshs.size(); i++) {
 	//	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	//	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());

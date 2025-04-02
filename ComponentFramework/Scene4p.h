@@ -63,6 +63,7 @@ private:
 	Matrix4 projectionMatrix;
 	Matrix4 viewMatrix;
 	bool drawInWireMode;
+	int zoom = 0;
 
 public:
 	explicit Scene4p();

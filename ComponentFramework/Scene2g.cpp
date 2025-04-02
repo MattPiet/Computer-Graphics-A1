@@ -47,23 +47,23 @@ bool Scene2g::OnCreate() {
 	//"textures/Underwater Box_Negz.png"
 	//};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
-	//	std::vector<std::string> skyTexts = {
-	//"textures/posx.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	//"textures/negx.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	//"textures/posy.jpg",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	//"textures/negy.jpg",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	//"textures/posz.jpg",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	//"textures/negz.jpg"
-	//};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
+		std::vector<std::string> skyTexts = {
+	"textures/posx.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
+	"textures/negx.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+	"textures/posy.jpg",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+	"textures/negy.jpg",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+	"textures/posz.jpg",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
+	"textures/negz.jpg"
+	};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
-	std::vector<std::string> skyTexts = {
-	"textures/px.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	"textures/nx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	"textures/py.png",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	"textures/ny.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	"textures/pz.png",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	"textures/nz.png"		// ^ flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
-	};					
+	//std::vector<std::string> skyTexts = {
+	//"textures/px.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
+	//"textures/nx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+	//"textures/py.png",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+	//"textures/ny.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+	//"textures/pz.png",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
+	//"textures/nz.png"		// ^ flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
+	//};					
 
 	//std::vector<std::string> skyTexts = {
 	//"textures/right.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 

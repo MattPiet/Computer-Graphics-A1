@@ -22,11 +22,11 @@ bool Scene3g::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
 	sub = new Body();
 	sub->OnCreate();
-
+	lightPos = Vec3(0.0f, 10.0f, 5.0f);
 	terrain = new Body();
 	terrain->OnCreate();
 
-	mesh = new Mesh("meshes/Sphere.obj");
+	mesh = new Mesh("meshes/Sub.obj");
 	mesh->OnCreate();
 
 
@@ -36,9 +36,14 @@ bool Scene3g::OnCreate() {
 	terrain_height_map = new Texture();
 	terrain_height_map->LoadImage("textures/terrainHeight.png");
 
-	terrainTexture = new Texture();
-	terrainTexture->LoadImage("textures/8x8_checkered_board.png");
-	//fuck u matehw!!
+	terrain_normal_map = new Texture();
+	terrain_normal_map->LoadImage("textures/terrainNormal.png");
+
+
+	terrain_diffuse_map = new Texture();
+	terrain_diffuse_map->LoadImage("textures/terrainDiffuse.png");
+
+
 	GLint MaxPatchVertices = 0;
 	glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
 	std::cout << "Max supported patch verticies&d\n" << MaxPatchVertices << std::endl;
@@ -48,11 +53,9 @@ bool Scene3g::OnCreate() {
 	terrainMesh->OnCreate();
 
 	terrain->pos = Vec3(0.0f, -10.0f, 0.0f);
-	terrain->orientation *= QMath::angleAxisRotation(90, Vec3(1.0f, 0.0f, 0.0f));
+	terrain->orientation *= QMath::angleAxisRotation(-90, Vec3(1.0f, 0.0f, 0.0f));
 	terrain->size = Vec3(30.0f, 30.0f, 30.0f);
-	//terrainModelMatrix = MMath::translate(0.0f, -10.0f, 0.0f) *
-	//	MMath::rotate(90.0f, Vec3(1.0f, 0.0f, 0.0f)) *
-	//	MMath::scale(40.0f, 1.0f, 40.0f);
+
 
 	camera = new Camera();
 	camera->OnCreate();
@@ -75,6 +78,7 @@ bool Scene3g::OnCreate() {
 	"textures/Underwater Box_Negz.png"
 	};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
+	////// -> CN TOWER
 	//std::vector<std::string> skyTexts = {
 	//"textures/posx.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
 	//"textures/negx.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
@@ -84,23 +88,6 @@ bool Scene3g::OnCreate() {
 	//"textures/negz.jpg"
 	//};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
-	//std::vector<std::string> skyTexts = {
-	//"textures/px.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	//"textures/nx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	//"textures/py.png",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	//"textures/ny.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	//"textures/pz.png",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	//"textures/nz.png"		// ^ flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
-	//};					
-
-	//std::vector<std::string> skyTexts = {
-	//"textures/right.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	//"textures/left.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	//"textures/top.jpg",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	//"textures/bottom.jpg",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	//"textures/front.jpg",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	//"textures/back.jpg"
-	//	};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
 	camera->setSkyBox(skyTexts);
 
@@ -126,6 +113,15 @@ void Scene3g::OnDestroy() {
 
 	texture->OnDestroy();
 	delete texture;
+	
+	terrain_height_map->OnDestroy();
+	delete terrain_height_map;
+
+	terrain_normal_map->OnDestroy();
+	delete terrain_normal_map;
+
+	terrain_diffuse_map->OnDestroy();
+	delete terrain_diffuse_map;
 
 	terrain->OnDestroy();
 	delete terrain;
@@ -135,9 +131,6 @@ void Scene3g::OnDestroy() {
 
 	tessShader->OnDestroy();
 	delete tessShader;
-
-	terrainTexture->OnDestroy();
-	delete terrainTexture;
 
 	camera->OnDestroy();
 	delete camera;
@@ -154,6 +147,15 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 	static bool isUKeyPressed = false;
 
 	switch (sdlEvent.type) {
+		
+	case SDL_MOUSEWHEEL:
+		if (sdlEvent.wheel.y > 0) {
+			zoom -= 2;  // Scroll up
+		}
+		else if (sdlEvent.wheel.y < 0) {
+			zoom += 2;  // Scroll down
+		}
+		break;
 	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
 		case SDL_SCANCODE_W:
@@ -173,7 +175,10 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 			case SDL_SCANCODE_UP:
 				tessLevelOuter++;
 				break;
-
+			case SDL_SCANCODE_T:
+				tessLevelInner++;
+				tessLevelOuter++;
+				break;
 			case SDL_SCANCODE_DOWN:
 				tessLevelOuter--;
 				break;
@@ -222,7 +227,7 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 void Scene3g::Update(const float deltaTime) {
 	camera->setTarget(sub->pos);
 
-	Vec3 offset = Vec3(0.0f, 30.0f, 100.0f);
+	Vec3 offset = Vec3(0.0f, 30.0f, 100.0f + zoom);
 	Vec3 rotatedOffset = QMath::rotate(offset, camera->GetOrientation());
 	cameraPos = Vec3(0.0f,0.0f,0.0f) + rotatedOffset;
 	camera->SetView(camera->GetOrientation(), cameraPos);
@@ -268,11 +273,14 @@ void Scene3g::Render() const {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	glUseProgram(tessShader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, terrainTexture->getTextureID());
-	
 	glActiveTexture(GL_TEXTURE0);
-
 	glBindTexture(GL_TEXTURE_2D, terrain_height_map->getTextureID());
+	
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, terrain_normal_map->getTextureID());
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, terrain_diffuse_map->getTextureID());
 
 	glUniformMatrix4fv(tessShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(tessShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
@@ -280,8 +288,10 @@ void Scene3g::Render() const {
 	glUniform1f(tessShader->GetUniformID("tessLevelOuter"), tessLevelOuter);
 	glUniform1f(tessShader->GetUniformID("tessLevelInner"), tessLevelInner);
 	glUniform1f(tessShader->GetUniformID("height_scale"), height_scale);
+	glUniform4fv(tessShader->GetUniformID("lightPosition"), 1, lightPos);
 	terrainMesh->Render(GL_PATCHES);
 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	glUseProgram(0);
