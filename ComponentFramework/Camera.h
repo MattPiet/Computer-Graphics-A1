@@ -8,6 +8,7 @@
 #include "SkyBox.h"
 #include "Trackball.h"
 #include "Texture.h"
+#include <QMath.h>
 using namespace MATH;
 
 union SDL_Event;
@@ -21,6 +22,9 @@ private:
 	Trackball trackball;
 	SkyBox* skybox;
 	Vec3 target = Vec3(0.0f, 0.0f, 0.0f);
+	Vec3 raw_position;
+
+
 public:
 	Camera();
 	~Camera();
@@ -35,20 +39,34 @@ public:
 		return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
 		
 	}
+
+	void setTranslatedPosition(Vec3 pos) { raw_position = pos; }
+
+	Matrix4 GetViewMatrixFreeCam() const {
+		return MMath::inverse(MMath::toMatrix4(orientation)) * MMath::inverse(MMath::translate(position));
+	}
 	Matrix4 GetViewMatrix2() const {
 
 			const auto center_point = Vec3(0.0f, 0.0f, 0.0f);
 			Vec3 translated_position = center_point - target;
 
 			return MMath::translate(position) *
-				MMath::toMatrix4(orientation) *
-				MMath::translate(translated_position);
+					MMath::toMatrix4(orientation) *
+					MMath::translate(translated_position);
 		
 	}
 
 	Matrix4 GetProjectionMatrix() const {
 		return projection;
 	}
+
+	Vec3 freeCameraMovement(Vec3 direction) {
+		Matrix4 worldToCamera = this->GetViewMatrix();
+		Matrix4 cameraToWorld = MMath::inverse(worldToCamera);
+		Vec3 rotated_forward_in_cam_space = cameraToWorld * direction;
+		return rotated_forward_in_cam_space;
+	}
+
 	void dontTrackY();
 	Quaternion GetOrientation() const { return orientation; }
 	void setSkyBox(std::vector<std::string> skybox_textures);

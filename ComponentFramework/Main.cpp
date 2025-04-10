@@ -14,6 +14,7 @@ int main(int argc, char* args[]) {
 	
 	SceneManager* gsm = new SceneManager();
 									// 1280, 720
+									// 1920, 1080
 	if (gsm->Initialize("Game Engine", 1920, 1080) ==  true) {
 		gsm->Run();
 	} 

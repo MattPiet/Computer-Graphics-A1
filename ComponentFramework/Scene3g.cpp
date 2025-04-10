@@ -143,8 +143,7 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 	camera->HandelEvents(sdlEvent);
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	static bool isOKeyPressed = false;
-	static bool isUKeyPressed = false;
+
 
 	switch (sdlEvent.type) {
 		
@@ -173,11 +172,15 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 		if (SDL_GetModState() & KMOD_LSHIFT) {
 			switch (sdlEvent.key.keysym.scancode) {
 			case SDL_SCANCODE_UP:
-				tessLevelOuter++;
+				if (tessLevelOuter < 32) {
+					tessLevelOuter++;
+				}
 				break;
 			case SDL_SCANCODE_T:
-				tessLevelInner++;
-				tessLevelOuter++;
+				if (tessLevelInner < 32 && tessLevelOuter < 32) {
+					tessLevelInner++;
+					tessLevelOuter++;
+				}
 				break;
 			case SDL_SCANCODE_DOWN:
 				tessLevelOuter--;
@@ -187,7 +190,9 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 		if (SDL_GetModState() & KMOD_RSHIFT) {
 			switch (sdlEvent.key.keysym.scancode) {
 			case SDL_SCANCODE_UP:
-				tessLevelInner++;
+				if (tessLevelInner < 32) {
+					tessLevelInner++;
+				}
 				break;
 
 			case SDL_SCANCODE_DOWN:
@@ -199,13 +204,6 @@ void Scene3g::HandleEvents(const SDL_Event& sdlEvent) {
 				
 		
 		
-	case SDL_KEYUP:
-		if (sdlEvent.button.button == SDL_SCANCODE_O) {
-			isOKeyPressed = false;
-		}
-		if (sdlEvent.button.button == SDL_SCANCODE_U) {
-			isUKeyPressed = false;
-		}
 
 	
 	case SDL_MOUSEMOTION:

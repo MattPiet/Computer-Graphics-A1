@@ -55,6 +55,37 @@ private:
 	bool drawInWireMode;
 	int tenticleIndex = 0;
 	int anchorIndex = 0;
+
+	Body* terrain;
+
+	Shader* tessShader;
+
+	Mesh* terrainMesh;
+
+
+	Texture* terrain_height_map;
+	Texture* terrain_normal_map;
+	Texture* terrain_diffuse_map;
+
+	float height_scale = 1;
+
+	float direction = 2.5f;
+
+	int up_down = 0;
+	int left_right = 0;
+
+
+
+	int zoom = 0;
+
+
+	float rotate;
+
+	float tessLevelOuter = 10.0f;
+	float tessLevelInner = 10.0f;
+
+	Vec3 lightPos;
+
 public:
 	explicit Scene3p();
 	virtual ~Scene3p();

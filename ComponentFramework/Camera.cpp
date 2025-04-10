@@ -55,6 +55,7 @@ bool Camera::OnCreate() {
 void Camera::HandelEvents(const SDL_Event& sdlEvent) {
 	trackball.HandleEvents(sdlEvent);
 	orientation = trackball.getQuat();
+
 }
 
 /// Our PASS tutor didn't like the name Render since it can't render itself. 

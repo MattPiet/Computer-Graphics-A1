@@ -32,7 +32,7 @@ bool Scene3p::OnCreate() {
 	jellyfishHead->OnCreate();
 	jellyfishHead->radius = 6;
 	jellyfishHead->size *= 6;
-	jellyfishHead->pos.set(-1.5, 4, -25);
+	jellyfishHead->pos.set(-1.5, 4, -45);
 
 	sphere = new Body();
 	sphere->OnCreate();
@@ -86,7 +86,7 @@ bool Scene3p::OnCreate() {
 
 
 	const int numAnchors = 10;
-	Vec3 anchorPos(-6.0f, -2.0f, -25);
+	Vec3 anchorPos(-6.0f, -2.0f, -45);
 	for (int i = 0; i < numAnchors; i++) {
 		anchors.push_back(new Body());
 		anchors[i]->pos = anchorPos;
@@ -114,7 +114,45 @@ bool Scene3p::OnCreate() {
 	anchorIndex = 0;
 
 	camera->dontTrackY();
-	sphere->vel.z = 5;
+	sphere->vel.z = 5.0f;
+
+	lightPos = Vec3(0.0f, 10.0f, 5.0f);
+	terrain = new Body();
+	terrain->OnCreate();
+
+	terrain_height_map = new Texture();
+	terrain_height_map->LoadImage("textures/terrainHeight.png");
+
+	terrain_normal_map = new Texture();
+	terrain_normal_map->LoadImage("textures/terrainNormal.png");
+
+
+	terrain_diffuse_map = new Texture();
+	terrain_diffuse_map->LoadImage("textures/terrainDiffuse.png");
+
+
+	GLint MaxPatchVertices = 0;
+	glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
+	std::cout << "Max supported patch verticies&d\n" << MaxPatchVertices << std::endl;
+	glPatchParameteri(GL_PATCH_VERTICES, 3);
+
+	terrainMesh = new Mesh("meshes/Plane.obj");
+	terrainMesh->OnCreate();
+
+	terrain->pos = Vec3(0.0f, -35.0f, 0.0f);
+	terrain->orientation *= QMath::angleAxisRotation(-90, Vec3(1.0f, 0.0f, 0.0f));
+	terrain->size = Vec3(30.0f, 30.0f, 30.0f);
+
+
+
+	tessShader = new Shader("shaders/Tessillation Vert.glsl", "shaders/Tessillation frag.glsl",
+		"shaders/Tessillation control.glsl", "shaders/Tessillation evaluator.glsl");
+	if (tessShader->OnCreate() == false) {
+		std::cout << "Tess Shader failed ... we have a problem\n";
+	}
+
+	
+
 	return true;
 }
 
@@ -153,58 +191,139 @@ void Scene3p::OnDestroy() {
 		tentacleSphere->OnDestroy();
 		delete tentacleSphere;
 	}
+
+	terrain_height_map->OnDestroy();
+	delete terrain_height_map;
+
+	terrain_normal_map->OnDestroy();
+	delete terrain_normal_map;
+
+	terrain_diffuse_map->OnDestroy();
+	delete terrain_diffuse_map;
+
+	terrain->OnDestroy();
+	delete terrain;
+
+	terrainMesh->OnDestroy();
+	delete terrainMesh;
+
+	tessShader->OnDestroy();
+	delete tessShader;
+
 }
 
 void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
 	//trackball.HandleEvents(sdlEvent);
 	camera->HandelEvents(sdlEvent);
-	switch( sdlEvent.type ) {
-    case SDL_KEYDOWN:
+	switch (sdlEvent.type) {
+	case SDL_MOUSEWHEEL:
+		if (sdlEvent.wheel.y > 0) {
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 0.0f, -1.0f)));
+	
+		}
+		else if (sdlEvent.wheel.y < 0) {
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 0.0f, 1.0f)));
+		}
+		break;
+	case SDL_KEYDOWN:
 		switch (sdlEvent.key.keysym.scancode) {
-			case SDL_SCANCODE_W:
-				jellyfishHead->pos.z--;
-				for (int i = 0; i < 10; i++) {
-					anchors[i]->pos.z--;
+		case SDL_SCANCODE_W:
+			jellyfishHead->pos.z--;
+			for (int i = 0; i < 10; i++) {
+				anchors[i]->pos.z--;
+			}
+			break;
+		case SDL_SCANCODE_S:
+			jellyfishHead->pos.z++;
+			for (int i = 0; i < 10; i++) {
+				anchors[i]->pos.z++;
+			}
+			break;
+		case SDL_SCANCODE_L:
+			drawInWireMode = !drawInWireMode;
+			break;
+		case SDL_SCANCODE_A:
+			jellyfishHead->pos.x--;
+			for (int i = 0; i < 10; i++) {
+				anchors[i]->pos.x--;
+			}
+			break;
+		case SDL_SCANCODE_D:
+			jellyfishHead->pos.x++;
+			for (int i = 0; i < 10; i++) {
+				anchors[i]->pos.x++;
+			}
+			break;
+
+		case SDL_SCANCODE_N:
+			if (drawNormals == false) {
+				drawNormals = true;
+			}
+			else {
+				drawNormals = false;
+			}
+			break;
+		case SDL_SCANCODE_SPACE:
+
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 1.0f, 0.0f)));
+			break;
+		
+
+		case SDL_SCANCODE_P:
+			height_scale++;
+			break;
+		case SDL_SCANCODE_M:
+			//if (height_scale >= 1.0f) {
+			height_scale--;
+			//}
+			break;
+		case SDL_SCANCODE_LCTRL:
+
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, -1.0f, 0.0f)));
+			break;
+		
+		case SDL_SCANCODE_E:
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(-1.0f, 0.0f, 0.0f)));
+			break;
+		
+		case SDL_SCANCODE_R:
+
+			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(1.0f, 0.0f, 0.0f)));
+			break;
+		
+	}
+		if (SDL_GetModState() & KMOD_LSHIFT) {
+			switch (sdlEvent.key.keysym.scancode) {
+			case SDL_SCANCODE_UP:
+				if (tessLevelOuter < 32) {
+					tessLevelOuter++;
 				}
 				break;
-			case SDL_SCANCODE_S:
-				jellyfishHead->pos.z++;		
-				for (int i = 0; i < 10; i++) {
-					anchors[i]->pos.z++;
+			case SDL_SCANCODE_T:
+				if (tessLevelInner < 32 && tessLevelOuter < 32) {
+					tessLevelInner++;
+					tessLevelOuter++;
 				}
 				break;
-			case SDL_SCANCODE_L:
-				drawInWireMode = !drawInWireMode;
+			case SDL_SCANCODE_DOWN:
+				tessLevelOuter--;
 				break;
-			case SDL_SCANCODE_A:
-				jellyfishHead->pos.x--;
-				for (int i = 0; i < 10; i++) {
-					anchors[i]->pos.x--;
-				}
-				break;
-			case SDL_SCANCODE_D:
-				jellyfishHead->pos.x++;
-				for (int i = 0; i < 10; i++) {
-					anchors[i]->pos.x++;
+			}
+		}
+		if (SDL_GetModState() & KMOD_RSHIFT) {
+			switch (sdlEvent.key.keysym.scancode) {
+			case SDL_SCANCODE_UP:
+				if (tessLevelInner < 32) {
+					tessLevelInner++;
 				}
 				break;
 
-			case SDL_SCANCODE_N:
-				if (drawNormals == false){
-					drawNormals = true;
-				}
-				else{
-					drawNormals = false;
-				}
-			break;
-			case SDL_SCANCODE_SPACE:
-				//jellyfishHead->pos.y++;
-				//for (int i = 0; i < 10; i++) {
-				//	anchors[i]->pos.y++;
-				//}
+			case SDL_SCANCODE_DOWN:
+				tessLevelInner--;
 				break;
+			}
 		}
-		break;
+	
 
 	case SDL_MOUSEMOTION:          
 		break;
@@ -220,31 +339,9 @@ void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
     }
 }
 
+
 void Scene3p::Update(const float deltaTime) {
 	jellyfishHead->updatePos(deltaTime);
-	sphere->pos.z += 0.1;
-	Quaternion start = cameraOri;
-	Quaternion end   = trackball.getQuat();
-	// Quaternion changeInOrientation = end / start;
-	Quaternion changeInOrientation = end * QMath::inverse(start);
-
-	cameraOri = trackball.getQuat();
-
-	cameraPos -= jellyfishHead->pos;
-	// Step 2 - Rotate around the sphere
-	cameraPos = QMath::rotate(cameraPos, changeInOrientation);
-	// Step 3 - Move back
-	cameraPos += jellyfishHead->pos;
-
-	// Think about Umer's cat pictures for this next bit
-	Matrix4 T = MMath::translate(cameraPos);
-	Matrix4 R = MMath::toMatrix4(cameraOri);
-	viewMatrix = MMath::inverse(R) * MMath::inverse(T);
-	
-	Vec3 offset = Vec3(0.0f, -2.0f, 40.0f);
-	Vec3 rotatedOffset = QMath::rotate(offset, camera->GetOrientation());
-	cameraPos = jellyfishHead->pos + rotatedOffset;
-	camera->SetView(camera->GetOrientation(), cameraPos);
 
 		for (int sphereIndex = 0; sphereIndex < 100; sphereIndex++) {
 			float c = 2.5f;
@@ -278,8 +375,8 @@ void Scene3p::Update(const float deltaTime) {
 				tentacleSpheres[sphereIndex]->RodConstraint(deltaTime, restraint, spacing);
 			
 			}
-			Collision::SphereSphereCollisionDetected(sphere, tentacleSpheres[sphereIndex]);
-			Collision::SphereSphereCollisionResponse(sphere, tentacleSpheres[sphereIndex]);
+			//Collision::SphereSphereCollisionDetected(sphere, tentacleSpheres[sphereIndex]);
+			//Collision::SphereSphereCollisionResponse(sphere, tentacleSpheres[sphereIndex]);
 
 			tenticleIndex++;
 			if (tenticleIndex == 10) {
@@ -308,7 +405,7 @@ void Scene3p::Render() const {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	
-	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// Restore OpenGL state
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
@@ -317,19 +414,19 @@ void Scene3p::Render() const {
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
 	//glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrixFreeCam());
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, jellyfishHead->GetModelMatrix());
 	mesh->Render(GL_TRIANGLES);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
-	glUseProgram(sphereShader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, sphereTexture->getTextureID());
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
-	glUniformMatrix4fv(sphereShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	glUniformMatrix4fv(sphereShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	glUniformMatrix4fv(sphereShader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphere->GetModelMatrix());
-	sphereMesh->Render(GL_TRIANGLES);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glUseProgram(sphereShader->GetProgram());
+	//glBindTexture(GL_TEXTURE_2D, sphereTexture->getTextureID());
+	////glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
+	//glUniformMatrix4fv(sphereShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	//glUniformMatrix4fv(sphereShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
+	//glUniformMatrix4fv(sphereShader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphere->GetModelMatrix());
+	//sphereMesh->Render(GL_TRIANGLES);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
 	for (Body* anchor : anchors) {
@@ -341,6 +438,35 @@ void Scene3p::Render() const {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, tentacleSphere->GetModelMatrix());
 		mesh->Render(GL_TRIANGLES);
 	}
+
+	if (drawInWireMode) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	glUseProgram(tessShader->GetProgram());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, terrain_height_map->getTextureID());
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, terrain_normal_map->getTextureID());
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, terrain_diffuse_map->getTextureID());
+
+	glUniformMatrix4fv(tessShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
+	glUniformMatrix4fv(tessShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrixFreeCam());
+	glUniformMatrix4fv(tessShader->GetUniformID("modelMatrix"), 1, GL_FALSE, terrain->GetModelMatrix());
+	glUniform1f(tessShader->GetUniformID("tessLevelOuter"), tessLevelOuter);
+	glUniform1f(tessShader->GetUniformID("tessLevelInner"), tessLevelInner);
+	glUniform1f(tessShader->GetUniformID("height_scale"), height_scale);
+	glUniform4fv(tessShader->GetUniformID("lightPosition"), 1, lightPos);
+	terrainMesh->Render(GL_PATCHES);
+
+	glActiveTexture(GL_TEXTURE0);
+
 
 	/// Added by Scott
 	if (drawNormals == true) {
