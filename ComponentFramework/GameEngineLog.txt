@@ -1,4 +1,4 @@
-Thu Apr 10 10:34:59 2025
+Thu Apr 10 11:05:18 2025
 [INFO]: Starting the SceneManager
 [INFO]: OpenGL version: 4.6.0 - Build 31.0.101.5333
 [INFO]: Graphics card vendor Intel
@@ -32,8 +32,8 @@ Thu Apr 10 10:34:59 2025
 
 [INFO]: Deleting assets Scene0: 
 [INFO]: Deleted Scene0: 
-[INFO]: Created Scene3p: 
-[INFO]: Loading assets Scene3p: 
+[INFO]: Created Scene4p: 
+[INFO]: Loading assets Scene4p: 
 [INFO]: Uniforms:
 "projectionMatrix" loc:0
 "viewMatrix" loc:1
@@ -52,25 +52,6 @@ Thu Apr 10 10:34:59 2025
 "colour" loc:3
 "myTexture" loc:4
 
-[INFO]: Uniforms:
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
-"colour" loc:3
-"myTexture" loc:4
-
-[INFO]: Uniforms:
-"tessLevelInner" loc:0
-"tessLevelOuter" loc:1
-"height_scale" loc:3
-"lightPosition" loc:6
-"modelMatrix" loc:5
-"projectionMatrix" loc:7
-"terrain_height_map" loc:2
-"viewMatrix" loc:4
-"terrain_diffuse_map" loc:8
-"terrain_normal_map" loc:9
-
 [INFO]: Deleting the SceneManager
-[INFO]: Deleting assets Scene3p: 
-[INFO]: Deleted Scene3p: 
+[INFO]: Deleting assets Scene4p: 
+[INFO]: Deleted Scene4p: 
