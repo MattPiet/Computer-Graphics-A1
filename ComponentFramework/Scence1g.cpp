@@ -254,6 +254,7 @@ void Scene1g::Render() const {
 	glUniform4fv(rightEyeShader->GetUniformID("ks[0]"), 5, *ks);
 	glUniform4fv(rightEyeShader->GetUniformID("kd[0]"), 5, *kd);
 	rightEyeMesh->Render(GL_TRIANGLES);
+
 	//left eye
 	glUseProgram(leftEyeShader->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, leftEyeTexture->getTextureID());

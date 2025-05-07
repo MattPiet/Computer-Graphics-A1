@@ -22,8 +22,6 @@ void main() {
     vec3 refractedColor = texture(skybox, Refraction).rgb;
 
    // vec3 finalColor = mix(refractedColor, reflectedColor,cosTheta);
-    vec3 finalColor = mix(reflectedColor,refractedColor ,cosTheta);
+    vec3 finalColor = mix(reflectedColor, refractedColor, cosTheta);
     fragColor = vec4(finalColor, 1.0);
-
-
 }

@@ -9,6 +9,7 @@
 #include <Triangle.h>
 #include <TMath.h>
 #include <Dot.h>
+#include "Timing.h"
 using namespace MATH;
 
 /// Forward declarations 

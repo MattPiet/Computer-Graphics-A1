@@ -169,6 +169,7 @@
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Timing.h" />
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="Trackball.h" />
     <ClInclude Include="Window.h" />
@@ -184,15 +185,12 @@
     <None Include="shaders\drawNormals.vert" />
     <None Include="shaders\mirrorFrag.glsl" />
     <None Include="shaders\mirrorVert.glsl" />
+    <None Include="shaders\NoiseVert.glsl" />
     <None Include="shaders\normalFrag.glsl" />
     <None Include="shaders\normalGeom.glsl" />
     <None Include="shaders\normalVert.glsl" />
     <None Include="shaders\planeFrag.glsl" />
-    <None Include="shaders\planeFrag_2.glsl" />
-    <None Include="shaders\planeFrag_3.glsl" />
     <None Include="shaders\planeVert.glsl" />
-    <None Include="shaders\planeVert_2.glsl" />
-    <None Include="shaders\planeVert_3.glsl" />
     <None Include="shaders\skyBoxFrag.glsl" />
     <None Include="shaders\skyBoxVert.glsl" />
     <None Include="shaders\Tessillation control.glsl" />

@@ -74,7 +74,7 @@ private:
 	int up_down = 0;
 	int left_right = 0;
 
-
+	float time = 0.0f;
 
 	int zoom = 0;
 

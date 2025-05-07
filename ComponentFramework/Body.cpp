@@ -87,7 +87,7 @@ void Body::RodConstraint(float deltaTime, Vec3 anchorPoint, float rodLength){
 	float positionConstraint = VMath::mag(rodVector) - rodLength; // set to the magnitude of the rodVector minus the 
 	if (VMath::mag(rodVector) < VERY_SMALL) { return; }
 	float JV = VMath::dot(rodVector, vel) / MATH::VMath::mag(rodVector);
-	const float baumgarteStabilizationParameter = 0.18; // Try tuning this number
+	const float baumgarteStabilizationParameter = 0.05; // Try tuning this number
 	float b = -(baumgarteStabilizationParameter / deltaTime) * positionConstraint;
 	float lambda = -mass * (JV + b);
 

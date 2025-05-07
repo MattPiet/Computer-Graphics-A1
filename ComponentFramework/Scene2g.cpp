@@ -144,6 +144,7 @@ void Scene2g::HandleEvents(const SDL_Event& sdlEvent) {
 
 void Scene2g::Update(const float deltaTime) {
 	camera->setTarget(sub->pos);
+
 	}
 
 

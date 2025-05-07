@@ -70,7 +70,7 @@ bool Scene3p::OnCreate() {
 	if (drawNormalsShader->OnCreate() == false) {
 		std::cout << "drawNormalsShader failed ... we have a problem\n";
 	}
-	shader = new Shader("shaders/defaultVert.glsl", "shaders/defaultFrag.glsl");
+	shader = new Shader("shaders/NoiseVert.glsl", "shaders/mirrorFrag.glsl");
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
@@ -151,8 +151,10 @@ bool Scene3p::OnCreate() {
 		std::cout << "Tess Shader failed ... we have a problem\n";
 	}
 
-	
-
+	Vec3 offset = Vec3(0.0f, 0.0f, 15.0f);
+	Vec3 rotatedOffset = QMath::rotate(offset, camera->GetOrientation());
+	cameraPos = Vec3(0.0f, 0.0f, 0.0f) + rotatedOffset;
+	camera->SetView(camera->GetOrientation(), cameraPos);
 	return true;
 }
 
@@ -219,7 +221,7 @@ void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
 	case SDL_MOUSEWHEEL:
 		if (sdlEvent.wheel.y > 0) {
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 0.0f, -1.0f)));
-	
+			
 		}
 		else if (sdlEvent.wheel.y < 0) {
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 0.0f, 1.0f)));
@@ -341,21 +343,17 @@ void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
 
 
 void Scene3p::Update(const float deltaTime) {
+	time += deltaTime;
 	jellyfishHead->updatePos(deltaTime);
-
+	cameraPos = Vec3(camera->GetViewMatrix().zero, camera->GetViewMatrix().two, camera->GetViewMatrix().three);
 		for (int sphereIndex = 0; sphereIndex < 100; sphereIndex++) {
-			float c = 2.5f;
-			float const gravity = -9.8f;
+			float c = 3.5f;
+			float const gravity = -5.0f;
 
 			Vec3 gravityAcc(0.0f, gravity * tentacleSpheres[sphereIndex]->mass, 0.0f);
 			Vec3 forceOfGravity = (tentacleSpheres[sphereIndex]->vel) + gravityAcc;
 			Vec3 dragForce = -c * tentacleSpheres[sphereIndex]->vel;
-			if (VMath::mag(tentacleSpheres[sphereIndex]->vel) > 1.0f) {
-				// Switch to turbulent flow if the spheres are moving fast
-				// That means drag force = -cv^2
-				dragForce = -c * tentacleSpheres[sphereIndex]->vel *
-					VMath::mag(tentacleSpheres[sphereIndex]->vel);
-			}
+
 			tentacleSpheres[sphereIndex]->ApplyForce(forceOfGravity + dragForce);
 
 			tentacleSpheres[sphereIndex]->UpdateVel(deltaTime);
@@ -375,20 +373,39 @@ void Scene3p::Update(const float deltaTime) {
 				tentacleSpheres[sphereIndex]->RodConstraint(deltaTime, restraint, spacing);
 			
 			}
-			//Collision::SphereSphereCollisionDetected(sphere, tentacleSpheres[sphereIndex]);
-			//Collision::SphereSphereCollisionResponse(sphere, tentacleSpheres[sphereIndex]);
 
 			tenticleIndex++;
 			if (tenticleIndex == 10) {
 				anchorIndex++;
 				tenticleIndex = 0;
 			}
-			
-			// update position using corrected velocities based on rod constraint
+
 			tentacleSpheres[sphereIndex]->updatePos(deltaTime);
 
 		}
+
+
 		
+		float amplitude = 0.05f;
+		float frequency = 0.5f;
+		float phaseAngle = jellyfishHead->pos.x;
+		Vec3 displacement;
+		displacement.x = 0;
+		displacement.y = amplitude * sin(frequency * time + phaseAngle);
+		displacement.z = 0;
+		jellyfishHead->pos += displacement;
+		
+		for (int i = 0; i < 10; i++) {
+		anchors[i]->pos = jellyfishHead->pos;
+		
+		float rad = 3.5f;
+		float angle = (i * 2 * M_PI) / 10;
+		anchors[i]->pos = Vec3(jellyfishHead->pos.x + cos(angle) * rad,
+			jellyfishHead->pos.y - 6.0f,
+			jellyfishHead->pos.z + sin(angle) * rad); 
+		
+		}
+
 }
 
 void Scene3p::Render() const {
@@ -411,24 +428,18 @@ void Scene3p::Render() const {
 	glEnable(GL_DEPTH_TEST);
 
 	glUseProgram(shader->GetProgram());
-	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
-	//glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
+	//glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
+	glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrixFreeCam());
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, jellyfishHead->GetModelMatrix());
-	mesh->Render(GL_TRIANGLES);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	
-	//glUseProgram(sphereShader->GetProgram());
-	//glBindTexture(GL_TEXTURE_2D, sphereTexture->getTextureID());
-	////glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
-	//glUniformMatrix4fv(sphereShader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
-	//glUniformMatrix4fv(sphereShader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	//glUniformMatrix4fv(sphereShader->GetUniformID("modelMatrix"), 1, GL_FALSE, sphere->GetModelMatrix());
-	//sphereMesh->Render(GL_TRIANGLES);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	glUniform1f(shader->GetUniformID("time"), time);
 
-	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
+	//glUniform3fv(shader->GetUniformID("cameraPos"), 1, cameraPos);
+	mesh->Render(GL_TRIANGLES);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
 	for (Body* anchor : anchors) {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, anchor->GetModelMatrix());
 		mesh->Render(GL_TRIANGLES);
@@ -438,7 +449,7 @@ void Scene3p::Render() const {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, tentacleSphere->GetModelMatrix());
 		mesh->Render(GL_TRIANGLES);
 	}
-
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	if (drawInWireMode) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}

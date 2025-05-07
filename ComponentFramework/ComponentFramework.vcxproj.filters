@@ -19,9 +19,6 @@
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{e8c82a08-d757-47ee-b6fe-eee59a99570f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Scene0pshaders">
-      <UniqueIdentifier>{ae97f3a9-b8b1-4743-9bd0-b3e38cfb3690}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Scene1gShaders">
       <UniqueIdentifier>{b546e834-4a27-464e-bc23-b61fcf305827}</UniqueIdentifier>
     </Filter>
@@ -33,6 +30,12 @@
     </Filter>
     <Filter Include="Resource Files\Tessillation">
       <UniqueIdentifier>{5d21fc61-453b-4fdc-8b22-727bdb0a912e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\noiseShaders">
+      <UniqueIdentifier>{fcccbceb-6f72-4e25-a59e-8916991fe014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Scene0pshaders">
+      <UniqueIdentifier>{ae97f3a9-b8b1-4743-9bd0-b3e38cfb3690}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +179,9 @@
     <ClInclude Include="Scene4p.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="Timing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="GameEngineLog.txt">
@@ -186,19 +192,7 @@
     <None Include="shaders\planeFrag.glsl">
       <Filter>Resource Files\Scene0pshaders</Filter>
     </None>
-    <None Include="shaders\planeFrag_2.glsl">
-      <Filter>Resource Files\Scene0pshaders</Filter>
-    </None>
-    <None Include="shaders\planeFrag_3.glsl">
-      <Filter>Resource Files\Scene0pshaders</Filter>
-    </None>
-    <None Include="shaders\planeVert_2.glsl">
-      <Filter>Resource Files\Scene0pshaders</Filter>
-    </None>
     <None Include="shaders\planeVert.glsl">
-      <Filter>Resource Files\Scene0pshaders</Filter>
-    </None>
-    <None Include="shaders\planeVert_3.glsl">
       <Filter>Resource Files\Scene0pshaders</Filter>
     </None>
     <None Include="shaders\drawNormals.frag">
@@ -254,6 +248,9 @@
     </None>
     <None Include="shaders\Tessillation Vert.glsl">
       <Filter>Resource Files\Tessillation</Filter>
+    </None>
+    <None Include="shaders\NoiseVert.glsl">
+      <Filter>Resource Files\noiseShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,15 +1,29 @@
-Thu Apr 10 11:05:18 2025
+Wed May  7 14:51:52 2025
 [INFO]: Starting the SceneManager
-[INFO]: OpenGL version: 4.6.0 - Build 31.0.101.5333
+[INFO]: OpenGL version: 4.6.0 - Build 32.0.101.6733
 [INFO]: Graphics card vendor Intel
 [INFO]: Graphics card name Intel(R) Iris(R) Xe Graphics
-[INFO]: GLSL Version 4.60 - Build 31.0.101.5333
-[INFO]: Created Scene0: 
-[INFO]: Loading assets Scene0: 
+[INFO]: GLSL Version 4.60 - Build 32.0.101.6733
+[INFO]: Created Scene3p: 
+[INFO]: Loading assets Scene3p: 
 [INFO]: Uniforms:
 "projectionMatrix" loc:0
 "viewMatrix" loc:1
 "skybox" loc:2
+
+[INFO]: Uniforms:
+"color" loc:3
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"viewMatrix" loc:1
+
+[INFO]: Uniforms:
+"modelMatrix" loc:2
+"projectionMatrix" loc:0
+"time" loc:3
+"viewMatrix" loc:1
+"cameraPos" loc:4
+"skybox" loc:5
 
 [INFO]: Uniforms:
 "modelMatrix" loc:2
@@ -30,28 +44,6 @@ Thu Apr 10 11:05:18 2025
 "terrain_diffuse_map" loc:8
 "terrain_normal_map" loc:9
 
-[INFO]: Deleting assets Scene0: 
-[INFO]: Deleted Scene0: 
-[INFO]: Created Scene4p: 
-[INFO]: Loading assets Scene4p: 
-[INFO]: Uniforms:
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
-"skybox" loc:2
-
-[INFO]: Uniforms:
-"color" loc:3
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
-
-[INFO]: Uniforms:
-"modelMatrix" loc:2
-"projectionMatrix" loc:0
-"viewMatrix" loc:1
-"colour" loc:3
-"myTexture" loc:4
-
 [INFO]: Deleting the SceneManager
-[INFO]: Deleting assets Scene4p: 
-[INFO]: Deleted Scene4p: 
+[INFO]: Deleting assets Scene3p: 
+[INFO]: Deleted Scene3p: 

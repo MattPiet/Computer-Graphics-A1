@@ -85,14 +85,14 @@ bool Scene0p::OnCreate() {
 		std::cout << "planeShader failed ... we have a problem\n";
 	}
 
-	planeShader_2 = new Shader("shaders/planeVert_2.glsl", "shaders/planeFrag_2.glsl");
+	planeShader_2 = new Shader("shaders/planeVert.glsl", "shaders/planeFrag.glsl");
 	if (planeShader_2->OnCreate() == false) {
 		std::cout << "planeShader_2 failed ... we have a problem\n";
 	}
 
-	planeShader_3 = new Shader("shaders/planeVert_3.glsl", "shaders/planeFrag_3.glsl");
+	planeShader_3 = new Shader("shaders/planeVert.glsl", "shaders/planeFrag.glsl");
 	if (planeShader_3->OnCreate() == false) {
-		std::cout << "planeShader_2 failed ... we have a problem\n";
+		std::cout << "planeShader_3 failed ... we have a problem\n";
 	}
 													
 	projectionMatrix = MMath::perspective(45.0f, (16.0f / 9.0f), 0.5f, 100.0f);
@@ -432,7 +432,7 @@ void Scene0p::Update(const float deltaTime) {
 
 //	camera->SetView(QMath::inverse(Quaternion(1,sphere->pos)), cameraPos);
 	//sphere->pos.y > -1.0f || ballOnPlane2 == true
-	if (VMath::mag(sphere->pos - plane_2->pos) < VMath::mag(sphere->pos - plane->pos) && planeAngle_2 - planeAngle >= -2 || ballOnPlane2 == true) {
+	if (VMath::mag(sphere->pos - plane_2->pos) < VMath::mag(sphere->pos - plane->pos) && planeAngle_2 - planeAngle >= -3 || ballOnPlane2 == true) {
 		ballOnPlane2 = true;
 		if (ballOnPlane2 != false) {
 			Vec3 up2 = Vec3(0.0f, 1.0f, 0.0f);
@@ -467,7 +467,7 @@ void Scene0p::Update(const float deltaTime) {
 			sphere->updatePos(deltaTime);
 		}
 	}
-	else if (VMath::mag(sphere->pos - plane_3->pos) < VMath::mag(sphere->pos - plane->pos) && planeAngle_3X - planeAngleX >= -2 || ballOnPlane3 == true) {
+	else if (VMath::mag(sphere->pos - plane_3->pos) < VMath::mag(sphere->pos - plane->pos) && planeAngle_3X - planeAngleX >= -3 || ballOnPlane3 == true) {
 		ballOnPlane3 = true;
 		Vec3 up3 = Vec3(0.0f, 1.0f, 0.0f);
 		std::cout << "planeshape2 normal X: " << planeShape_3->normal.x << ", Y: " << planeShape_3->normal.y << ", Z: " << planeShape_3->normal.z << std::endl;
@@ -498,6 +498,7 @@ void Scene0p::Update(const float deltaTime) {
 		}
 		sphere->UpdateVel(deltaTime);
 		sphere->updatePos(deltaTime);
+		
 	}
 	else {
 		if (ballOnPlane1 == false) {
@@ -521,14 +522,14 @@ void Scene0p::Update(const float deltaTime) {
 		ballOnPlane2 = false;
 		ballOnPlane1 = true;
 		Vec3 up = Vec3(0.0f, 1.0f, 0.0f);
-		std::cout << "planeshape normal X: " << planeShape->normal.x << ", Y: " << planeShape->normal.y << ", Z: " << planeShape->normal.z << std::endl;
+		//std::cout << "planeshape normal X: " << planeShape->normal.x << ", Y: " << planeShape->normal.y << ", Z: " << planeShape->normal.z << std::endl;
 		float cos_angle = VMath::dot(up, planeShape->normal);
 		float angle = acosf(cos_angle);
 		Vec3 torqueDirection = VMath::cross(up, planeShape->normal);
 		float torqueMag = sphere->mass * sphere->radius * sin(angle);
 		Vec3 totalTorque = torqueMag * torqueDirection;
 		sphere->ApplyTorque(totalTorque);
-
+		
 		// Update angular velocity based on the new angular acceleration
 		sphere->UpdateAngularVel(deltaTime);
 		// Update orientation based on angular velocity
@@ -613,19 +614,19 @@ void Scene0p::Render() const {
 	glBindTexture(GL_TEXTURE_2D, planeText_2->getTextureID());
 	glUniformMatrix4fv(planeShader_2->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(planeShader_2->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	glUniformMatrix4fv(planeShader_2->GetUniformID("planeModelMatrix_2"), 1, GL_FALSE, plane_2->GetModelMatrix());
+	glUniformMatrix4fv(planeShader_2->GetUniformID("planeModelMatrix"), 1, GL_FALSE, plane_2->GetModelMatrix());
 	glUniform3fv(planeShader_2->GetUniformID("lightPosition[0]"), 5, *Plane_lightPosition);
 	glUniform4fv(planeShader_2->GetUniformID("ks[0]"), 5, *Plane_ks);
 	glUniform4fv(planeShader_2->GetUniformID("kd[0]"), 5, *Plane_kd);
 
-	planeMesh_3->Render(GL_TRIANGLES);
+	planeMesh_2->Render(GL_TRIANGLES);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glUseProgram(planeShader_3->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, planeText_3->getTextureID());
 	glUniformMatrix4fv(planeShader_3->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(planeShader_3->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix());
-	glUniformMatrix4fv(planeShader_3->GetUniformID("planeModelMatrix_3"), 1, GL_FALSE, plane_3->GetModelMatrix());
+	glUniformMatrix4fv(planeShader_3->GetUniformID("planeModelMatrix"), 1, GL_FALSE, plane_3->GetModelMatrix());
 	glUniform3fv(planeShader_3->GetUniformID("lightPosition[0]"), 5, *Plane_lightPosition);
 	glUniform4fv(planeShader_3->GetUniformID("ks[0]"), 5, *Plane_ks);
 	glUniform4fv(planeShader_3->GetUniformID("kd[0]"), 5, *Plane_kd);
