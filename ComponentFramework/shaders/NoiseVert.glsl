@@ -31,6 +31,7 @@ void main() {
     displacement.z = 0;
 
     vertexPosition += displacement;
+
     
     gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);
 }

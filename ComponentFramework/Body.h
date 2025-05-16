@@ -57,7 +57,8 @@ public:
 	void UpdateVel(float deltaTime);
 	void UpdateAngularAcc(float deltaTime);
 	void RodConstraint(float deltaTime, Vec3 anchorPoint, float rodLength);
-	static void LineCollision(Body* sphere, Body* pointOnPlane, Triangle* triangleShape, Body* collisionPoint, DualQuat line01, DualQuat line12, DualQuat line20,
+	static void LineCollision(Body* sphere, Body* pointOnPlane, Triangle* triangleShape, 
+		Body* collisionPoint, DualQuat line01, DualQuat line12, DualQuat line20,
 		Body* pointOnLine01, Body* pointOnLine12, Body* pointOnLine20);
 };
 

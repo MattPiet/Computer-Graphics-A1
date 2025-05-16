@@ -199,6 +199,7 @@ void Scene4p::OnDestroy() {
 		triangles_from_knot_meshs[i]->OnDestroy();
 		delete triangles_from_knot_meshs[i];
 	}
+
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {

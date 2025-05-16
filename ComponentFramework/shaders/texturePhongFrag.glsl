@@ -9,8 +9,8 @@ layout(location = 6) in vec3 eyeDir;
 layout(location = 7) in vec2 textureCoords; 
 
 uniform sampler2D myTexture; 
-   uniform vec4 ks[5];  
-   uniform vec4 kd[5];  
+uniform vec4 ks[5];  
+uniform vec4 kd[5];  
 
 
 void main() {		  

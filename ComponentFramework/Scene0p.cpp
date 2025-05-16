@@ -106,7 +106,7 @@ bool Scene0p::OnCreate() {
 	planeShape->normal = QMath::rotate(planeShape->normal, rotation);
 	plane->size *= 2;
 	plane1_rotationHolder = rotation;
-	std::cout << planeShape->normal.x << ", y: " << planeShape->normal.y << ", z: " << planeShape->normal.z << std::endl;
+	//std::cout << planeShape->normal.x << ", y: " << planeShape->normal.y << ", z: " << planeShape->normal.z << std::endl;
 
 	rotationForPlane2 = QMath::angleAxisRotation(90.0f, Vec3(1.0f, 0.0f, 0.0f));
 	plane_2->orientation *= rotationForPlane2;
@@ -321,7 +321,7 @@ void Scene0p::HandleEvents(const SDL_Event &sdlEvent) {
 				plane->orientation *= rotation;
 				planeShape->normal = QMath::rotate(planeShape->normal, rotation);
 				planeAngle++;
-				std::cout << planeShape->normal.x << ", y: " << planeShape->normal.y << ", z: " << planeShape->normal.z << std::endl;
+				//std::cout << planeShape->normal.x << ", y: " << planeShape->normal.y << ", z: " << planeShape->normal.z << std::endl;
 				break;
 
 			case SDL_SCANCODE_S:
@@ -412,11 +412,11 @@ void Scene0p::resetAll(){
 }
 
 void Scene0p::Update(const float deltaTime) {
-	std::cout << planeAngle_2 - planeAngle << std::endl;
-	std::cout << planeAngle_3X - planeAngleX << std::endl;
-	std::cout << ballOnPlane2 << std::endl;
-	std::cout << ballOnPlane3 << std::endl;
-	std::cout << "spherePos.x: " << sphere->pos.x << ", y: " << sphere->pos.y << ", z" << sphere->pos.z << std::endl;
+//	std::cout << planeAngle_2 - planeAngle << std::endl;
+//	std::cout << planeAngle_3X - planeAngleX << std::endl;
+//	std::cout << ballOnPlane2 << std::endl;
+//	std::cout << ballOnPlane3 << std::endl;
+	//std::cout << "spherePos.x: " << sphere->pos.x << ", y: " << sphere->pos.y << ", z" << sphere->pos.z << std::endl;
 	sphere->Update(deltaTime);
 	float const gravity = -9.8f;
 	float c = 0.2f;
@@ -436,7 +436,7 @@ void Scene0p::Update(const float deltaTime) {
 		ballOnPlane2 = true;
 		if (ballOnPlane2 != false) {
 			Vec3 up2 = Vec3(0.0f, 1.0f, 0.0f);
-			std::cout << "planeshape2 normal X: " << planeShape_2->normal.x << ", Y: " << planeShape_2->normal.y << ", Z: " << planeShape_2->normal.z << std::endl;
+		//	std::cout << "planeshape2 normal X: " << planeShape_2->normal.x << ", Y: " << planeShape_2->normal.y << ", Z: " << planeShape_2->normal.z << std::endl;
 			float cos_angle2 = VMath::dot(up2, planeShape_2->normal);
 			float angle2 = acosf(cos_angle2);
 			Vec3 torqueDirection2 = VMath::cross(up2, planeShape_2->normal);
@@ -470,7 +470,7 @@ void Scene0p::Update(const float deltaTime) {
 	else if (VMath::mag(sphere->pos - plane_3->pos) < VMath::mag(sphere->pos - plane->pos) && planeAngle_3X - planeAngleX >= -3 || ballOnPlane3 == true) {
 		ballOnPlane3 = true;
 		Vec3 up3 = Vec3(0.0f, 1.0f, 0.0f);
-		std::cout << "planeshape2 normal X: " << planeShape_3->normal.x << ", Y: " << planeShape_3->normal.y << ", Z: " << planeShape_3->normal.z << std::endl;
+	//	std::cout << "planeshape2 normal X: " << planeShape_3->normal.x << ", Y: " << planeShape_3->normal.y << ", Z: " << planeShape_3->normal.z << std::endl;
 		float cos_angle3 = VMath::dot(up3, planeShape_3->normal);
 		float angle3 = acosf(cos_angle3);
 		
@@ -541,6 +541,7 @@ void Scene0p::Update(const float deltaTime) {
 		}
 		else if(sphere->pos.z < -10.0f || sphere->pos.x > 10.0f || sphere->pos.z > 10.0f || sphere->pos.x < -10.0f){
 			ballOnPlane1 = false;
+			
 		}
 		sphere->UpdateVel(deltaTime);
 		sphere->updatePos(deltaTime);
