@@ -69,24 +69,24 @@ bool Scene3g::OnCreate() {
 	if (tessShader->OnCreate() == false) {
 		std::cout << "Tess Shader failed ... we have a problem\n";
 	}
-	std::vector<std::string> skyTexts = {
-	"textures/Underwater Box_Posx.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	"textures/Underwater Box_Negx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	"textures/Underwater Box_Posy.png",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	"textures/Underwater Box_Negy.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	"textures/Underwater Box_Posz.png",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	"textures/Underwater Box_Negz.png"
-	};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
+	//std::vector<std::string> skyTexts = {
+	//"textures/Underwater Box_Posx.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
+	//"textures/Underwater Box_Negx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+	//"textures/Underwater Box_Posy.png",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+	//"textures/Underwater Box_Negy.png",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+	//"textures/Underwater Box_Posz.png",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
+	//"textures/Underwater Box_Negz.png"
+	//};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
 	////// -> CN TOWER
-	//std::vector<std::string> skyTexts = {
-	//"textures/posx.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
-	//"textures/negx.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-	//"textures/posy.jpg",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-	//"textures/negy.jpg",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-	//"textures/posz.jpg",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
-	//"textures/negz.jpg"
-	//};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
+	std::vector<std::string> skyTexts = {
+	"textures/posx.jpg",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
+	"textures/negx.jpg",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+	"textures/posy.jpg",     // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+	"textures/negy.jpg",  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+	"textures/posz.jpg",    // GL_TEXTURE_CUBE_MAP_POSITIVE_Z// this is technically the back side but because insides are
+	"textures/negz.jpg"
+	};					// flipped when looking inside a skybox  i need to make it the front side the same applies with the back jpg
 
 
 	camera->setSkyBox(skyTexts);

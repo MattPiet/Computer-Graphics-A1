@@ -21,9 +21,9 @@ void Collision::SphereSphereCollisionResponse(Body* body1, Body* body2) {
         body1->vel += (impulseJ * VMath::normalize(normalVector) / body1->mass);
         body2->vel -= (impulseJ * VMath::normalize(normalVector) / body2->mass);
 
-        std::cout << "The vel of a non specific tenticle sphere is: ";  body2->vel.print();
+        //std::cout << "The vel of a non specific tenticle sphere is: ";  body2->vel.print();
 
-      //  body1->angVel = VMath::cross(Vec3(0.0f, 1.0f, 0.0f), body1->vel);
-       // body2->angVel = VMath::cross(Vec3(0.0f, 1.0f, 0.0f), body2->vel);
+         body1->angVel = VMath::cross(Vec3(0.0f, 1.0f, 0.0f), body1->vel);
+        body2->angVel = VMath::cross(Vec3(0.0f, 1.0f, 0.0f), body2->vel);
     }
 }

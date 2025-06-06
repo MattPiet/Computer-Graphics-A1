@@ -265,7 +265,7 @@ void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
 				drawNormals = false;
 			}
 			break;
-		case SDL_SCANCODE_SPACE:
+		case SDL_SCANCODE_UP:
 
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, 1.0f, 0.0f)));
 			break;
@@ -279,16 +279,16 @@ void Scene3p::HandleEvents(const SDL_Event &sdlEvent) {
 			height_scale--;
 			//}
 			break;
-		case SDL_SCANCODE_LCTRL:
+		case SDL_SCANCODE_DOWN:
 
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(0.0f, -1.0f, 0.0f)));
 			break;
 		
-		case SDL_SCANCODE_E:
+		case SDL_SCANCODE_LEFT:
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(-1.0f, 0.0f, 0.0f)));
 			break;
 		
-		case SDL_SCANCODE_R:
+		case SDL_SCANCODE_RIGHT:
 
 			camera->SetView(camera->GetOrientation(), camera->freeCameraMovement(Vec3(1.0f, 0.0f, 0.0f)));
 			break;

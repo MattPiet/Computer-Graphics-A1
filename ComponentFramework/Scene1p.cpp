@@ -130,8 +130,8 @@ bool Scene1p::OnCreate() {
 	kd[2] = Vec4(0.3, 0.3, 0.7, 0.0);  // Soft blue
 	kd[3] = Vec4(0.8, 0.5, 0.2, 0.0);  // Subdued orange
 	kd[4] = Vec4(0.8, 0.3, 0.8, 0.0);  // Gentle purple
-	trackball.Trackingx = false;
-	trackball.Trackingz = false;
+	//trackball.Trackingx = false;
+	//trackball.Trackingz = false;
 	std::vector<std::string> skyTexts = {
 		"textures/px.png",   // GL_TEXTURE_CUBE_MAP_POSITIVE_X 
 		"textures/nx.png",    // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
@@ -235,8 +235,8 @@ void Scene1p::HandleEvents(const SDL_Event& sdlEvent) {
 			case SDL_SCANCODE_SPACE:
 				impulseDirWorldSpace = QMath::rotate(impulseDirCameraSpace,
 					trackball.getQuat());
-				if (power < 8.0f) {
-					power += 0.2;
+				if (power < 20.0f) {
+					power += 0.5;
 				}
 				std::cout << "Power: " << power << std::endl;
 		
@@ -334,17 +334,17 @@ void Scene1p::Update(const float deltaTime) {
 		sphere->UpdateOrientation(deltaTime);
 		float d = VMath::dot(planeShape->normal, sphere->pos);
 		if (d < 1.0f && sphere->pos.z > -10.0f && sphere->pos.x < 20.0f && sphere->pos.z < 10.0f && sphere->pos.x > -20.0f) {
-			sphere->vel = VMath::cross(sphere->angVel, planeShape->normal);
 			sphere->pos += (d - 1) * -VMath::normalize(planeShape->normal);
+			sphere->vel = VMath::cross(sphere->angVel, planeShape->normal);
 		}
-		else if (sphere->pos.z < -10.0f || sphere->pos.x > 20.0f || sphere->pos.z > 10.0f || sphere->pos.x < -20.0f) {
+		//else if (sphere->pos.z < -10.0f || sphere->pos.x > 20.0f || sphere->pos.z > 10.0f || sphere->pos.x < -20.0f) {
 			float const gravity = -9.8f;
 			float c = 0.2f;
 			Vec3 gravityAcc(0.0f, gravity * sphere->mass, 0.0f);
 			Vec3 forceOfGravity = (sphere->vel * -c) + gravityAcc;
 			sphere->ApplyForce(forceOfGravity);
-			ballOnPlane1 = false;
-		}
+		//	ballOnPlane1 = false;
+		//}
 		sphere->UpdateVel(deltaTime);
 		sphere->updatePos(deltaTime);
 	}
@@ -372,14 +372,14 @@ void Scene1p::Update(const float deltaTime) {
 				arrayOfSpheres[0]->vel = VMath::cross(arrayOfSpheres[0]->angVel, planeShape->normal);
 				arrayOfSpheres[0]->pos += (d - 1) * -VMath::normalize(planeShape->normal);
 			}
-			else if (arrayOfSpheres[0]->pos.z < -10.0f || arrayOfSpheres[0]->pos.x > 20.0f || arrayOfSpheres[0]->pos.z > 10.0f || arrayOfSpheres[0]->pos.x < -20.0f) {
+		//	else if (arrayOfSpheres[0]->pos.z < -10.0f || arrayOfSpheres[0]->pos.x > 20.0f || arrayOfSpheres[0]->pos.z > 10.0f || arrayOfSpheres[0]->pos.x < -20.0f) {
 				float const gravity = -9.8f;
 				float c = 0.2f;
 				Vec3 gravityAcc(0.0f, gravity * arrayOfSpheres[0]->mass, 0.0f);
 				Vec3 forceOfGravity = (arrayOfSpheres[1]->vel * -c) + gravityAcc;
 				arrayOfSpheres[0]->ApplyForce(forceOfGravity);
-				Sphere3OnPlane1 = false;
-			}
+				//Sphere3OnPlane1 = false;
+			//}
 			arrayOfSpheres[0]->UpdateVel(deltaTime);
 			arrayOfSpheres[0]->updatePos(deltaTime);
 		}
@@ -426,14 +426,14 @@ void Scene1p::Update(const float deltaTime) {
 				arrayOfSpheres[1]->vel = VMath::cross(arrayOfSpheres[1]->angVel, planeShape->normal);
 				arrayOfSpheres[1]->pos += (d - 1) * -VMath::normalize(planeShape->normal);
 			}
-			else if (arrayOfSpheres[1]->pos.z < -10.0f || arrayOfSpheres[1]->pos.x > 20.0f || arrayOfSpheres[1]->pos.z > 10.0f || arrayOfSpheres[1]->pos.x < -20.0f) {
+			//else if (arrayOfSpheres[1]->pos.z < -10.0f || arrayOfSpheres[1]->pos.x > 20.0f || arrayOfSpheres[1]->pos.z > 10.0f || arrayOfSpheres[1]->pos.x < -20.0f) {
 				float const gravity = -9.8f;
 				float c = 0.2f;
 				Vec3 gravityAcc(0.0f, gravity * arrayOfSpheres[1]->mass, 0.0f);
 				Vec3 forceOfGravity = (arrayOfSpheres[1]->vel * -c) + gravityAcc;
 				arrayOfSpheres[1]->ApplyForce(forceOfGravity);
-				Sphere4OnPlane1 = false;
-			}
+			//	Sphere4OnPlane1 = false;
+			//}
 			arrayOfSpheres[1]->UpdateVel(deltaTime);
 			arrayOfSpheres[1]->updatePos(deltaTime);
 		}
@@ -482,14 +482,14 @@ void Scene1p::Update(const float deltaTime) {
 			sphere2->vel = VMath::cross(sphere2->angVel, planeShape->normal);
 			sphere2->pos += (d - 1) * -VMath::normalize(planeShape->normal);
 		}
-		else if (sphere2->pos.z < -10.0f || sphere2->pos.x > 20.0f || sphere2->pos.z > 10.0f || sphere2->pos.x < -20.0f) {
+		//else if (sphere2->pos.z < -10.0f || sphere2->pos.x > 20.0f || sphere2->pos.z > 10.0f || sphere2->pos.x < -20.0f) {
 			float const gravity = -9.8f;
 			float c = 0.2f;
 			Vec3 gravityAcc(0.0f, gravity * sphere2->mass, 0.0f);
 			Vec3 forceOfGravity = (sphere2->vel * -c) + gravityAcc;
 			sphere2->ApplyForce(forceOfGravity);
-			Sphere2OnPlane1 = false;
-		}
+			//Sphere2OnPlane1 = false;
+		//}
 		sphere2->UpdateVel(deltaTime);
 		sphere2->updatePos(deltaTime);
 	}

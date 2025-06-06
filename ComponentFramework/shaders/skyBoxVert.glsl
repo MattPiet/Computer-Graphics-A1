@@ -10,5 +10,6 @@ layout(location = 1) uniform mat4 viewMatrix;
 
 void main() {
     textureCoords = inUvcoord;  // Pass 3D texture coordinates
+    textureCoords.x *= -1.0;
     gl_Position = projectionMatrix * viewMatrix * vec4(inUvcoord, 1.0);
 }

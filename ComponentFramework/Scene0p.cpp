@@ -424,6 +424,8 @@ void Scene0p::Update(const float deltaTime) {
 	Vec3 force = (sphere->vel * -c) + gravityAcc;
 	// Apply forces to the sphere
 	sphere->ApplyForce(force);
+
+
 	cameraOrientation = trackball.getQuat();
 	Vec3 offset = Vec3(0.0f, 1.0f, 30.0f);
 	Vec3 rotatedOffset = QMath::rotate(offset, cameraOrientation);

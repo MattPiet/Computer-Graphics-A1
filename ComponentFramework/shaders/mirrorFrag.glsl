@@ -16,10 +16,13 @@ void main() {
 
     vec3 Refraction = refract(view_direction_vector, normalize(Rotated_normal), ratio);
 
+    reflection_direction_vector.x *= -1.0;
+    Refraction.x *= -1.0;
  
     float cosTheta = dot(-view_direction_vector, normalize(Rotated_normal));
     vec3 reflectedColor = texture(skybox, reflection_direction_vector).rgb;
     vec3 refractedColor = texture(skybox, Refraction).rgb;
+
 
    // vec3 finalColor = mix(refractedColor, reflectedColor,cosTheta);
     vec3 finalColor = mix(reflectedColor, refractedColor, cosTheta);
