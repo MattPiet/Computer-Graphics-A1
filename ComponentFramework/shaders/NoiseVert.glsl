@@ -25,9 +25,10 @@ void main() {
     float amplitude = 0.5f;
     float frequency = 2.0f;
     float phaseAngle = vertexPosition.y;
+    float verticalShift = 0.0f;
     vec3 displacement;
     displacement.x = 0;
-    displacement.y = amplitude * sin(frequency * time + phaseAngle);
+    displacement.y = amplitude * sin(frequency * time + phaseAngle + verticalShift);
     displacement.z = 0;
 
     vertexPosition += displacement;

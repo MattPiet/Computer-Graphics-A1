@@ -289,8 +289,17 @@ void Scene3g::Render() const {
 	glUniform4fv(tessShader->GetUniformID("lightPosition"), 1, lightPos);
 	terrainMesh->Render(GL_PATCHES);
 
+	// unbind 2
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// unbind 1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//unbind 0 and reset to default
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 	
 	glUseProgram(0);
 }

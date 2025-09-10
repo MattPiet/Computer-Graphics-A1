@@ -34,7 +34,7 @@ bool Scene2g::OnCreate() {
 	camera = new Camera();
 	camera->OnCreate();
 
-	shader = new Shader("shaders/mirrorVert.glsl", "shaders/mirrorFrag.glsl");
+	shader = new Shader("shaders/NoiseVert.glsl", "shaders/mirrorFrag.glsl");
 	if (shader->OnCreate() == false) {
 		std::cout << "Shader failed ... we have a problem\n";
 	}
@@ -143,8 +143,9 @@ void Scene2g::HandleEvents(const SDL_Event& sdlEvent) {
 }
 
 void Scene2g::Update(const float deltaTime) {
+	time += deltaTime;
 	camera->setTarget(sub->pos);
-
+	
 	}
 
 
@@ -171,7 +172,7 @@ void Scene2g::Render() const {
 	glUniformMatrix4fv(shader->GetUniformID("projectionMatrix"), 1, GL_FALSE, camera->GetProjectionMatrix());
 	glUniformMatrix4fv(shader->GetUniformID("viewMatrix"), 1, GL_FALSE, camera->GetViewMatrix2());
 	glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, sub->GetModelMatrix());
-
+	glUniform1f(shader->GetUniformID("time"), time);
 	 
 	Vec3 Forward = Vec3(0.0f, 0.0f, -1.0f);
 	Vec3 rotatedForward = QMath::rotate(Forward, camera->GetOrientation());

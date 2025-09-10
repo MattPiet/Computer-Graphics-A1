@@ -32,7 +32,7 @@ bool Scene3p::OnCreate() {
 	jellyfishHead->OnCreate();
 	jellyfishHead->radius = 6;
 	jellyfishHead->size *= 6;
-	jellyfishHead->pos.set(-1.5, 4, -45);
+	jellyfishHead->pos.set(-1.5, 5, -45);
 
 	sphere = new Body();
 	sphere->OnCreate();
@@ -41,7 +41,7 @@ bool Scene3p::OnCreate() {
 	sphere->pos.set(-1.5, -8, -45);
 	sphere->mass = 100;
 
-	mesh = new Mesh("meshes/Sphere.obj");
+	mesh = new Mesh("meshes/jellyfish head.obj");
 	mesh->OnCreate();
 
 	sphereMesh = new Mesh("meshes/Sphere.obj");
@@ -401,7 +401,7 @@ void Scene3p::Update(const float deltaTime) {
 		float rad = 3.5f;
 		float angle = (i * 2 * M_PI) / 10;
 		anchors[i]->pos = Vec3(jellyfishHead->pos.x + cos(angle) * rad,
-			jellyfishHead->pos.y - 6.0f,
+			jellyfishHead->pos.y - 3.0f,
 			jellyfishHead->pos.z + sin(angle) * rad); 
 		
 		}
@@ -411,10 +411,10 @@ void Scene3p::Update(const float deltaTime) {
 void Scene3p::Render() const {
 	glEnable(GL_DEPTH_TEST);
 	/// Set the background color then clear the screen
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.01, 0.2, 0.4, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	camera->RenderSkyBox();
+	//camera->RenderSkyBox();
 
 	if(drawInWireMode){
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -442,12 +442,12 @@ void Scene3p::Render() const {
 	glBindTexture(GL_TEXTURE_CUBE_MAP, camera->getSkyBoxTexture()->getTextureID());
 	for (Body* anchor : anchors) {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, anchor->GetModelMatrix());
-		mesh->Render(GL_TRIANGLES);
+		sphereMesh->Render(GL_TRIANGLES);
 	}
 
 	for (Body* tentacleSphere : tentacleSpheres) {
 		glUniformMatrix4fv(shader->GetUniformID("modelMatrix"), 1, GL_FALSE, tentacleSphere->GetModelMatrix());
-		mesh->Render(GL_TRIANGLES);
+		sphereMesh->Render(GL_TRIANGLES);
 	}
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	if (drawInWireMode) {
@@ -476,7 +476,16 @@ void Scene3p::Render() const {
 	glUniform4fv(tessShader->GetUniformID("lightPosition"), 1, lightPos);
 	terrainMesh->Render(GL_PATCHES);
 
+	// unbind 2
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// unbind 1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//unbind 0 and reset to default
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	/// Added by Scott
@@ -484,7 +493,7 @@ void Scene3p::Render() const {
 		DrawNormals(Vec4(1.0f, 1.0f, 0.0f, 0.5f));
 	}
 	
-		glBindTexture(GL_TEXTURE_2D, 0);
+		
 //	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 

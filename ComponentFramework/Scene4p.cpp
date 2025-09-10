@@ -99,8 +99,8 @@ Scene4p::~Scene4p() {
 		knot_mesh->vertices.clear();
 		knot_mesh->need_vertices = false;
 		
-		/*
-			for (int i = 0; i < knotTris.size(); i++) {
+		
+		/*	for (int i = 0; i < knotTris.size(); i++) {
 				Mesh* new_tri_mesh = new Mesh();
 				new_tri_mesh->OnCreate(knotTris[i]);
 				triangles_from_knot_meshs.push_back(new_tri_mesh);

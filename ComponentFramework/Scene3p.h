@@ -26,8 +26,9 @@ private:
 	// And the smallest spheres will make up the tentacles 
 	std::vector<Body*> tentacleSpheres;
 
-	std::vector<Matrix4> modelMatricesTentacleSphere;
-	std::vector<Matrix4> modelMatricesAnchors;
+	std::vector<Body*> JellyFishHeads;
+	std::vector<std::vector<Body*>> jellyFishAnchors;
+
 	// These variables will tells us how long each tentacle will be  
 	// and the spacing between individual spheres 
 	const int numSpheresPerAnchor = 100;

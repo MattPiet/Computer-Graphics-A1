@@ -50,6 +50,7 @@ public:
 			const auto center_point = Vec3(0.0f, 0.0f, 0.0f);
 			Vec3 translated_position = center_point - target;
 
+
 			return MMath::translate(position) *
 					MMath::toMatrix4(orientation) *
 					MMath::translate(translated_position);

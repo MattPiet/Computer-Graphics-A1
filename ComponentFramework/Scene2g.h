@@ -28,7 +28,7 @@ private:
 	Matrix4 viewMatrix;
 	Matrix4 modelMatrix;
 
-
+	float time = 0.0f;
 	bool drawInWireMode;
 	float rotate;
 
