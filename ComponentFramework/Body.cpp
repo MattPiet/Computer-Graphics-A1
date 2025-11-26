@@ -1,4 +1,5 @@
 #include "Body.h"
+#include "MemoryMonitor.h"
 Body::Body() : pos{}, vel{}, accel{}, angAcc{}, angVel {}, radius{1.0f}, mass{1.0f}, mesh{nullptr}, texture{nullptr} {
 }
 

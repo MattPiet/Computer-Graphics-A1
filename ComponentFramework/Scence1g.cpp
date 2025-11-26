@@ -9,6 +9,8 @@
 #include "Body.h"
 #include "Texture.h"
 
+#include "MemoryMonitor.h"
+
 Scene1g::Scene1g() : mario(nullptr), shader(nullptr), mesh(nullptr),
 drawInWireMode(false), texture(nullptr), leftEye(nullptr), leftEyeShader(nullptr), leftEyeMesh(nullptr),
 leftEyeTexture(nullptr), rightEye(nullptr), rightEyeShader(nullptr), rightEyeMesh(nullptr),
@@ -22,6 +24,7 @@ Scene1g::~Scene1g() {
 
 bool Scene1g::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	mario = new Body();
 	mario->OnCreate();
 	//lightPos = Vec3(10.0f, 0.0f, 0.0f);
@@ -107,42 +110,55 @@ void Scene1g::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	mario->OnDestroy();
 	delete mario;
+	mario = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	rightEye->OnDestroy();
 	delete rightEye;
+	rightEye = nullptr;
 
 	rightEyeMesh->OnDestroy();
 	delete rightEyeMesh;
+	rightEyeMesh = nullptr;
 
 	rightEyeShader->OnDestroy();
 	delete rightEyeShader;
+	rightEyeShader = nullptr;
 
 	rightEyeTexture->OnDestroy();
 	delete rightEyeTexture;
+	rightEyeTexture = nullptr;
 
 	leftEye->OnDestroy();
 	delete leftEye;
+	leftEye = nullptr;
 
 	leftEyeMesh->OnDestroy();
 	delete leftEyeMesh;
+	leftEyeMesh = nullptr;
 
 	leftEyeShader->OnDestroy();
 	delete leftEyeShader;
+	leftEyeShader = nullptr;
 
 	leftEyeTexture->OnDestroy();
 	delete leftEyeTexture;
+	leftEyeTexture = nullptr;
 
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
 
 
 }
@@ -233,6 +249,7 @@ void Scene1g::Render() const {
 	// Restore OpenGL state
 	glDepthMask(GL_TRUE);  
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	//Skull
 	glUseProgram(shader->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
@@ -243,7 +260,7 @@ void Scene1g::Render() const {
 	glUniform4fv(shader->GetUniformID("ks[0]"), 5, *ks);
 	glUniform4fv(shader->GetUniformID("kd[0]"), 5, *kd);
 	mesh->Render(GL_TRIANGLES);
-
+	glDisable(GL_CULL_FACE);
 	//right eye
 	glUseProgram(rightEyeShader->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, rightEyeTexture->getTextureID());
@@ -254,7 +271,7 @@ void Scene1g::Render() const {
 	glUniform4fv(rightEyeShader->GetUniformID("ks[0]"), 5, *ks);
 	glUniform4fv(rightEyeShader->GetUniformID("kd[0]"), 5, *kd);
 	rightEyeMesh->Render(GL_TRIANGLES);
-
+	glDisable(GL_CULL_FACE);
 	//left eye
 	glUseProgram(leftEyeShader->GetProgram());
 	glBindTexture(GL_TEXTURE_2D, leftEyeTexture->getTextureID());

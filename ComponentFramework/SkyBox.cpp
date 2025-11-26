@@ -1,6 +1,6 @@
 #include "SkyBox.h"
 
-
+#include "MemoryMonitor.h"
 
 SkyBox::SkyBox(const char* posXFileName_, const char* negXFileName_, 
 	const char* posYFileName_, const char* negYFileName_, 

@@ -8,7 +8,7 @@
 #include "Shader.h"
 #include "Body.h"
 
-
+#include "MemoryMonitor.h"
 
 
 Scene0p::Scene0p() :sphere{nullptr}, shader{nullptr}, mesh{nullptr},
@@ -24,6 +24,7 @@ Scene0p::~Scene0p() {
 
 bool Scene0p::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	sphere = new Body();
 	sphere->OnCreate();
 
@@ -168,54 +169,84 @@ void Scene0p::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	sphere->OnDestroy();
 	delete sphere;
+	sphere = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	plane->OnDestroy();
 	delete plane;
+	plane = nullptr;
 
 	planeMesh->OnDestroy();
 	delete planeMesh;
+	planeMesh = nullptr;
 
 	planeShader->OnDestroy();
 	delete planeShader;
+	planeShader = nullptr;
 
 	planeText->OnDestroy();
 	delete planeText;
+	planeText = nullptr;
 
 	plane_2->OnDestroy();
 	delete plane_2;
+	plane_2 = nullptr;
 
 	planeMesh_2->OnDestroy();
 	delete planeMesh_2;
+	planeMesh_2 = nullptr;
 
 	planeShader_2->OnDestroy();
 	delete planeShader_2;
+	planeShader_2 = nullptr;
 
 	planeText_2->OnDestroy();
 	delete planeText_2;
+	planeText_2 = nullptr;
 
 	plane_3->OnDestroy();
 	delete plane_3;
+	plane_3 = nullptr;
 
 	planeMesh_3->OnDestroy();
 	delete planeMesh_3;
+	planeMesh_3 = nullptr;
 
 	planeShader_3->OnDestroy();
 	delete planeShader_3;
+	planeShader_3 = nullptr;
 
 	planeText_3->OnDestroy();
 	delete planeText_3;
+	planeText_3 = nullptr;
 
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
+
+	if (planeShape) {
+		delete planeShape;
+		planeShape = nullptr;
+	}
+	if (planeShape_2) {
+		delete planeShape_2;
+		planeShape_2 = nullptr;
+	}
+	if (planeShape_3) {
+		delete planeShape_3;
+		planeShape_3 = nullptr;
+	}
 }
 
 void Scene0p::HandleEvents(const SDL_Event &sdlEvent) {

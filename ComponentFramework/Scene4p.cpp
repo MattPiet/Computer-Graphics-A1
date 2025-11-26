@@ -9,6 +9,9 @@
 #include "Body.h"
 #include <QMath.h>
 #include "Collision.h"
+
+#include "MemoryMonitor.h"
+
 using namespace MATHEX;
 using namespace MATH;
 Scene4p::Scene4p()
@@ -42,6 +45,7 @@ Scene4p::~Scene4p() {
 		// Warning from Umer
 		// Switch off all rolling before starting assignment 2
 		Debug::Info("Loading assets Scene4p: ", __FILE__, __LINE__);
+		std::cout << "---------------------------------------------------\n";
 		triangle = new Body();
 		triangle->OnCreate();
 		triangle->pos.set(0, 0, 0);
@@ -156,23 +160,30 @@ void Scene4p::OnDestroy() {
 	Debug::Info("Deleting assets Scene4p: ", __FILE__, __LINE__);
 	triangle->OnDestroy();
 	delete triangle;
+	triangle = nullptr;
 
 	sphere->OnDestroy();
 	delete sphere;
+	sphere = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	triangleMesh->OnDestroy();
 	delete triangleMesh;
+	triangleMesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	delete triangleShape;
+	triangleShape = nullptr;
 
 	pointOnLine01->OnDestroy();
 	pointOnLine12->OnDestroy();
@@ -182,24 +193,42 @@ void Scene4p::OnDestroy() {
 	delete pointOnLine12;
 	delete pointOnLine20;
 
+	pointOnLine01 = nullptr;
+	pointOnLine12 = nullptr;
+	pointOnLine20 = nullptr;
+
 	collisionPoint->OnDestroy();
 	delete collisionPoint;
+	collisionPoint = nullptr;
 
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
 
 	knot_mesh->OnDestroy();
 	delete knot_mesh;
+	knot_mesh = nullptr;
 
-	for (int i = 0; i < knotTris.size() - 1; i++) {
+	for (int i = 0; i < knotTris.size(); i++) {
 		delete knotTris[i];
+		knotTris[i] = nullptr;
 	}
+
 
 	for (int i = 0; i < triangles_from_knot_meshs.size(); i++) {
 		triangles_from_knot_meshs[i]->OnDestroy();
 		delete triangles_from_knot_meshs[i];
+		triangles_from_knot_meshs[i] = nullptr;
 	}
-
+	pointOnPlane->OnDestroy();
+	delete pointOnPlane;
+	pointOnPlane = nullptr;
+	knot->OnDestroy();
+	delete knot;
+	knot = nullptr;
+	drawNormalsShader->OnDestroy();
+	delete drawNormalsShader;
+	drawNormalsShader = nullptr;
 }
 
 void Scene4p::HandleEvents(const SDL_Event& sdlEvent) {

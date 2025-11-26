@@ -9,6 +9,8 @@
 #include "Body.h"
 #include "Texture.h"
 
+#include "MemoryMonitor.h"
+
 Scene2g::Scene2g() : sub(nullptr), shader(nullptr), mesh(nullptr),
 drawInWireMode(false), texture(nullptr) {
 	Debug::Info("Created Scene0: ", __FILE__, __LINE__);
@@ -20,6 +22,7 @@ Scene2g::~Scene2g() {
 
 bool Scene2g::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	sub = new Body();
 	sub->OnCreate();
 
@@ -89,19 +92,24 @@ void Scene2g::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	sub->OnDestroy();
 	delete sub;
+	sub = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
 
 
 }

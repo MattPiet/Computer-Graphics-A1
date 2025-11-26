@@ -9,7 +9,7 @@
 #include "Body.h"
 
 
-
+#include "MemoryMonitor.h"
 
 
 Scene1p::Scene1p() :sphere{ nullptr }, shader{ nullptr }, mesh{ nullptr },
@@ -25,6 +25,7 @@ Scene1p::~Scene1p() {
 
 bool Scene1p::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	sphere = new Body();
 	sphere->OnCreate();
 	sphere->pos = Vec3(15.0f, 1.0f, 0.0f);
@@ -148,37 +149,72 @@ void Scene1p::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	sphere->OnDestroy();
 	delete sphere;
+	sphere = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	sphere2->OnDestroy();
 	delete sphere2;
+	sphere2 = nullptr;
 
 	sphere2Mesh->OnDestroy();
 	delete sphere2Mesh;
+	sphere2Mesh = nullptr;
+
+	sphere3Mesh->OnDestroy();
+	delete sphere3Mesh;
+	sphere3Mesh = nullptr;
+
+	sphere4Mesh->OnDestroy();
+	delete sphere4Mesh;
+	sphere4Mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	plane->OnDestroy();
 	delete plane;
+	plane = nullptr;
 
 	planeMesh->OnDestroy();
 	delete planeMesh;
+	planeMesh = nullptr;
 
 	planeShader->OnDestroy();
 	delete planeShader;
+	planeShader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	planeText->OnDestroy();
 	delete planeText;
+	planeText = nullptr;
 
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
 
+	for (int i = 0; i < 2; i++) {
+		if (arrayOfSpheres[i]) {
+			arrayOfSpheres[i]->OnDestroy();
+			delete arrayOfSpheres[i];
+			arrayOfSpheres[i] = nullptr;
+		}
+	}
+	if (planeShape) {
+		delete planeShape;
+		planeShape = nullptr;
+	}
+	if (eightBall) {
+		eightBall->OnDestroy();
+		delete eightBall;
+		eightBall = nullptr;
+	}
 }
 
 void Scene1p::HandleEvents(const SDL_Event& sdlEvent) {

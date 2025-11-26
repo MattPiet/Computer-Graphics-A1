@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include <SDL_image.h>
 
+#include "MemoryMonitor.h"
 
 Texture::Texture() {
 	textureID = 0;

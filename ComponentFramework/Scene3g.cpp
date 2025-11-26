@@ -9,6 +9,8 @@
 #include "Body.h"
 #include "Texture.h"
 
+#include "MemoryMonitor.h"
+
 Scene3g::Scene3g() : sub(nullptr), shader(nullptr), mesh(nullptr),
 drawInWireMode(false), texture(nullptr) {
 	Debug::Info("Created Scene0: ", __FILE__, __LINE__);
@@ -20,6 +22,7 @@ Scene3g::~Scene3g() {
 
 bool Scene3g::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	sub = new Body();
 	sub->OnCreate();
 	lightPos = Vec3(0.0f, 10.0f, 5.0f);
@@ -104,36 +107,47 @@ void Scene3g::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	sub->OnDestroy();
 	delete sub;
+	sub = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 	
 	terrain_height_map->OnDestroy();
 	delete terrain_height_map;
+	terrain_height_map = nullptr;
 
 	terrain_normal_map->OnDestroy();
 	delete terrain_normal_map;
+	terrain_normal_map = nullptr;
 
 	terrain_diffuse_map->OnDestroy();
 	delete terrain_diffuse_map;
+	terrain_diffuse_map = nullptr;
 
 	terrain->OnDestroy();
 	delete terrain;
+	terrain = nullptr;
 
 	terrainMesh->OnDestroy();
 	delete terrainMesh;
+	terrainMesh = nullptr;
 
 	tessShader->OnDestroy();
 	delete tessShader;
+	tessShader = nullptr;
 
 	camera->OnDestroy();
 	delete camera;
+	camera = nullptr;
 
 
 }

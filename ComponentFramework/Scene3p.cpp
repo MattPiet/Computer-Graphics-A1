@@ -10,6 +10,8 @@
 #include <QMath.h>
 #include "Collision.h"
 
+#include "MemoryMonitor.h"
+
 Scene3p::Scene3p() 
 : jellyfishHead{nullptr}
 , shader{nullptr}
@@ -28,6 +30,7 @@ bool Scene3p::OnCreate() {
 	// Warning from Umer
 	// Switch off all rolling before starting assignment 2
 	Debug::Info("Loading assets Scene3p: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	jellyfishHead = new Body();
 	jellyfishHead->OnCreate();
 	jellyfishHead->radius = 6;
@@ -162,55 +165,81 @@ void Scene3p::OnDestroy() {
 	Debug::Info("Deleting assets Scene3p: ", __FILE__, __LINE__);
 	jellyfishHead->OnDestroy();
 	delete jellyfishHead;
+	jellyfishHead = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	texture->OnDestroy();
 	delete texture;
+	texture = nullptr;
 
 	sphere->OnDestroy();
 	delete sphere;
+	sphere = nullptr;
 
 	sphereMesh->OnDestroy();
 	delete sphereMesh;
+	sphereMesh = nullptr;
 
 	sphereShader->OnDestroy();
 	delete sphereShader;
+	sphereShader = nullptr;
 
 	sphereTexture->OnDestroy();
 	delete sphereTexture;
+	sphereTexture = nullptr;
 
 	for (auto anchor : anchors) {
 		anchor->OnDestroy();
 		delete anchor;
+		anchor = nullptr;
 	}
+	anchors.clear();
 	
 	for (auto tentacleSphere : tentacleSpheres) {
 		tentacleSphere->OnDestroy();
 		delete tentacleSphere;
+		tentacleSphere = nullptr;
 	}
+	tentacleSpheres.clear();
 
 	terrain_height_map->OnDestroy();
 	delete terrain_height_map;
+	terrain_height_map = nullptr;
 
 	terrain_normal_map->OnDestroy();
 	delete terrain_normal_map;
+	terrain_normal_map = nullptr;
 
 	terrain_diffuse_map->OnDestroy();
 	delete terrain_diffuse_map;
+	terrain_diffuse_map = nullptr;
 
 	terrain->OnDestroy();
 	delete terrain;
+	terrain = nullptr;
 
 	terrainMesh->OnDestroy();
 	delete terrainMesh;
+	terrainMesh = nullptr;
 
 	tessShader->OnDestroy();
 	delete tessShader;
+	tessShader = nullptr;
+
+	drawNormalsShader->OnDestroy();
+	 delete drawNormalsShader;
+	 drawNormalsShader = nullptr;
+
+	camera->OnDestroy();
+	delete camera;
+	camera = nullptr;
 
 }
 

@@ -1,5 +1,6 @@
 #include "Collision.h"
 
+#include "MemoryMonitor.h"
 bool Collision::SphereSphereCollisionDetected(const Body* body1, const Body* body2){
     float distance = VMath::distance(body1->pos, body2->pos);
     if (distance < body1->radius + body2->radius) {

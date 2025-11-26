@@ -4,6 +4,8 @@
 #include <VMath.h>
 #include <QMath.h>
 
+#include "MemoryMonitor.h"
+
 ///https://www.khronos.org/opengl/wiki/Object_Mouse_Trackball
 using namespace MATH;
 

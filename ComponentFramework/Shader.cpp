@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string.h>
 
+#include "MemoryMonitor.h"
+
 Shader::Shader(const char* vertFilename_, const char* fragFilename_,
 	const char* tessCtrlFilename_, const char* tessEvalFilename_,
 	const char* geomFilename_) :

@@ -10,6 +10,9 @@
 #include "Scene3p.h"
 #include "Scene3g.h"
 #include "Scene4p.h"
+
+#include "MemoryMonitor.h"
+
 SceneManager::SceneManager(): 
 	currentScene{nullptr}, window{nullptr}, timer{nullptr},
 	fps(60), isRunning{false}, fullScreen{false} {

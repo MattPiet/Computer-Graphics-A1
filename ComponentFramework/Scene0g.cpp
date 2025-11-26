@@ -8,6 +8,8 @@
 #include "Shader.h"
 #include "Body.h"
 
+#include "MemoryMonitor.h"
+
 Scene0g::Scene0g() :sphere{nullptr}, shader{nullptr}, mesh{nullptr},
 drawInWireMode{false} {
 	Debug::Info("Created Scene0: ", __FILE__, __LINE__);
@@ -19,6 +21,7 @@ Scene0g::~Scene0g() {
 
 bool Scene0g::OnCreate() {
 	Debug::Info("Loading assets Scene0: ", __FILE__, __LINE__);
+	std::cout << "---------------------------------------------------\n";
 	sphere = new Body();
 	sphere->OnCreate();
 	
@@ -40,12 +43,15 @@ void Scene0g::OnDestroy() {
 	Debug::Info("Deleting assets Scene0: ", __FILE__, __LINE__);
 	sphere->OnDestroy();
 	delete sphere;
+	sphere = nullptr;
 
 	mesh->OnDestroy();
 	delete mesh;
+	mesh = nullptr;
 
 	shader->OnDestroy();
 	delete shader;
+	shader = nullptr;
 
 	
 }
